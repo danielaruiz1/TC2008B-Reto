@@ -1,6 +1,6 @@
 # Blender 4.0.2
 # www.blender.org
-mtllib Straightroad.mtl
+mtllib Straightroad2.mtl
 o Interseccion
 v 1.001459 -0.000778 0.502982
 v 1.001459 -0.000778 0.669649
