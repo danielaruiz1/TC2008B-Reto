@@ -1,4 +1,4 @@
-# Blender 4.0.2 MTL File: 'Straightroad.blend'
+# Blender 4.0.2 MTL File: 'SuperRoad.blend'
 # www.blender.org
 
 newmtl Sidewalk
@@ -12,7 +12,7 @@ d 1.000000
 illum 2
 
 newmtl Street
-Ns 88.902451
+Ns 88.902374
 Ka 1.000000 1.000000 1.000000
 Kd 0.122338 0.122338 0.122338
 Ks 0.500000 0.500000 0.500000
@@ -22,7 +22,7 @@ d 1.000000
 illum 2
 
 newmtl Stripes
-Ns 38.906673
+Ns 38.906769
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 0.949928 0.859864
 Ks 0.500000 0.500000 0.500000
