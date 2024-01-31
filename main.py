@@ -2,6 +2,15 @@
 import pygame
 from pygame.locals import *
 
+import agentpy as ap
+import pathfinding as pf        #In case you want to use pathfinding algorithms for the agent's plan
+import matplotlib.pyplot as plt
+from owlready2 import *
+import itertools
+import random
+#import IPython
+import math
+
 # Cargamos las bibliotecas de OpenGL
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -11,6 +20,8 @@ from OpenGL.GLUT import *
 import sys, math
 sys.path.append('..')
 #from Ciudad import Ciudad
+
+from objloader import *
 
 screen_width = 500
 screen_height = 500
@@ -41,6 +52,8 @@ DimBoard = 200
 #Variables para el control del observador
 theta = 0.0
 radius = DimBoard + 20
+
+objetos = []
 
 pygame.init()
 
@@ -94,6 +107,16 @@ def Init():
     glEnable(GL_DEPTH_TEST)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
+    glLightfv(GL_LIGHT0, GL_POSITION,  (0, 200, 0, 0.0))
+    glLightfv(GL_LIGHT0, GL_AMBIENT, (0.5, 0.5, 0.5, 1.0))
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, (0.5, 0.5, 0.5, 1.0))
+    glEnable(GL_LIGHTING)
+    glEnable(GL_LIGHT0)
+    glEnable(GL_COLOR_MATERIAL)
+    glShadeModel(GL_SMOOTH)           # most obj files expect to be smooth-shaded        
+    objetos.append(OBJ("Objetos/Semaforo4.obj", swapyz=True))
+    objetos[0].generate()
+
 """ def draw_building(x, y, z, width, height, depth):
     glColor3f(0.8, 0.8, 0.8)
     glBegin(GL_QUADS)
@@ -139,6 +162,16 @@ def Init():
             # Draw streets along z-axis
             draw_street(i, j - 50, i, j + 50, 5) """
 
+def displayobj():
+    glPushMatrix()  
+    #correcciones para dibujar el objeto en plano XZ
+    #esto depende de cada objeto
+    glRotatef(-90.0, 1.0, 0.0, 0.0)
+    glTranslatef(0.0, 0.0, 15.0)
+    glScale(10.0,10.0,10.0)
+    objetos[0].render()  
+    glPopMatrix()
+
 def display():  
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     Axis()
@@ -151,6 +184,8 @@ def display():
     glVertex3d(DimBoard, 0, -DimBoard)
     glEnd()
     #draw_city()
+
+    displayobj()
 
 def handle_keys():
     global CENTER_X, CENTER_Y, CENTER_Z, EYE_Y, theta
@@ -169,6 +204,7 @@ def handle_keys():
             theta += 1.0
         lookat()
         
+
 done = False
 Init()
 while not done:
