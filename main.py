@@ -2,13 +2,15 @@
 import pygame
 from pygame.locals import *
 
+import os
+
 import agentpy as ap
 import pathfinding as pf        #In case you want to use pathfinding algorithms for the agent's plan
 import matplotlib.pyplot as plt
 from owlready2 import *
 import itertools
 import random
-#import IPython
+import IPython
 import math
 
 # Cargamos las bibliotecas de OpenGL
@@ -54,6 +56,8 @@ theta = 0.0
 radius = DimBoard + 20
 
 objetos = []
+
+ontologia_file_path = "pFinal_onto.owl"
 
 pygame.init()
 
@@ -113,7 +117,7 @@ def Init():
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
     glEnable(GL_COLOR_MATERIAL)
-    glShadeModel(GL_SMOOTH)           # most obj files expect to be smooth-shaded        
+    glShadeModel(GL_SMOOTH)# most obj files expect to be smooth-shaded        
     objetos.append(OBJ("Objetos/Semaforo4.obj", swapyz=True))
     objetos[0].generate()
 
@@ -203,7 +207,93 @@ def handle_keys():
         else:
             theta += 1.0
         lookat()
-        
+
+if os.path.exists(ontologia_file_path):
+    os.remove(ontologia_file_path)
+    print(f"Archivo {ontologia_file_path} existente eliminado.")
+
+    
+onto = get_ontology("file://./pFinal_onto.owl")
+
+with onto:
+
+    #My SuperClass
+    class Entity(Thing):
+      pass
+
+    class Car(Entity):
+      pass
+
+    class Traffic_light(Entity):
+      pass
+
+    class Pedestrian(Entity):
+      pass
+
+    class Place(Thing):
+      pass
+
+    #Propiedad que especifica la posicion del objeto
+    class at_position(DataProperty,FunctionalProperty):
+      domain = [Place]
+      range = [str]
+      pass
+
+    #Estado del semaforo (Colores)
+    class traffic_light_state(DataProperty):
+      domain = [Traffic_light]
+      range = [str]
+
+    #Velocidad del carro
+    class has_speed_car(DataProperty):
+      domain = [Car]
+      range = [float]
+
+    #Velocidad del peaton
+    class has_speed_pedestrian(DataProperty):
+      domain = [Pedestrian]
+      range = [float]
+
+    #Propiedad para describir los carros que tenga adelante
+    class cars_within_reach(ObjectProperty):
+      domain = [Traffic_light]
+      range = [int]
+
+    #Property to describe the place of an entity in the world
+    class is_in_place(ObjectProperty):
+      domain = [Entity]
+      range = [Place]
+      pass
+
+    class controls_traffic_light(ObjectProperty):
+      domain = [Traffic_light]
+      range = [Car]
+      cardinality = [1, None]
+
+    #Relacion carro y semaforo
+    class is_controlled_by_traffic_light(ObjectProperty):
+      domain = [Car]
+      range = [Traffic_light]
+      inverse_property = controls_traffic_light
+      cardinality = [0, 1]
+
+    class pedestrians_at_crosswalk(ObjectProperty):
+        domain = [Traffic_light]
+        range = [Pedestrian]
+        cardinality = [0, None]
+
+    #Relación entre peatones y semáforos
+    class crosswalks_at(ObjectProperty):
+        domain = [Pedestrian]
+        range = [Traffic_light]
+        inverse_property = pedestrians_at_crosswalk
+        cardinality = [0, 1]
+    
+    onto.save()
+
+class Car(ap.agent):
+   def setup(self):
+      self.agentType = 0
 
 done = False
 Init()
@@ -217,5 +307,13 @@ while not done:
 
     pygame.display.flip()
     pygame.time.wait(10)
+
+print("Clases en la ontología:")
+for cls in onto.classes():
+    print(cls)
+
+print("\nPropiedades en la ontología:")
+for prop in onto.properties():
+    print(prop)
 
 pygame.quit()
