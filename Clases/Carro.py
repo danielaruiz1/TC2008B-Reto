@@ -18,7 +18,7 @@ class Carro:
     def __init__(self, vel):
         self.Position = []
         self.Position.append(1)
-        self.Position.append(10)
+        self.Position.append(100)
         self.Position.append(1)
         
         self.Direction = []
@@ -48,7 +48,7 @@ class Carro:
         #correcciones para dibujar el objeto en plano XZ
         #esto depende de cada objeto
         glRotatef(-90.0, 1.0, 0.0, 0.0)
-        glTranslatef(self.Position[0], 10, self.Position[2])
+        glTranslatef(0.0, 0.0, 15)
         glScale(10.0,10.0,10.0)
         self.objeto.render()  
         glPopMatrix()
