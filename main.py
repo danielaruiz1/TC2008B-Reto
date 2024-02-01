@@ -34,9 +34,9 @@ ZNEAR=1.0
 ZFAR=900.0
 #Variables para definir la posicion del observador
 #gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z)
-EYE_X=300.0
-EYE_Y=200.0
-EYE_Z=300.0
+EYE_X=60.0
+EYE_Y=40.0
+EYE_Z=60.0
 CENTER_X=0
 CENTER_Y=0
 CENTER_Z=0
@@ -54,7 +54,7 @@ Z_MAX=500
 DimBoard = 200
 #Variables para el control del observador
 theta = 0.0
-radius = DimBoard + 20
+radius = 60
 
 carros = []
 objetos = []
@@ -121,59 +121,59 @@ def Init():
     glEnable(GL_COLOR_MATERIAL)
     glShadeModel(GL_SMOOTH)# most obj files expect to be smooth-shaded        
     
+    objetos.append(OBJ("Objetos/SuperRoad.obj", swapyz=True))
+    objetos[0].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[1].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[2].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[3].generate()
+    objetos.append(OBJ("Objetos/SuperRoad.obj", swapyz=True))
+    objetos[4].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[5].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[6].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[7].generate()
+    objetos.append(OBJ("Objetos/SuperRoad.obj", swapyz=True))
+    objetos[8].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[9].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[10].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[11].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[12].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[13].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[14].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[15].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[16].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[17].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[18].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[19].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[20].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[21].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[22].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[23].generate()
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos[24].generate()
+
     carros.append(Carro(1))
 
-    glShadeModel(GL_SMOOTH)           # most obj files expect to be smooth-shaded        
-    objetos.append(OBJ("TC2008B-Reto/Objetos/SuperRoad.obj", swapyz=True))
-    objetos[0].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[1].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[2].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[3].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/SuperRoad.obj", swapyz=True))
-    objetos[4].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[5].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[6].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[7].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/SuperRoad.obj", swapyz=True))
-    objetos[8].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[9].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[10].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[11].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[12].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[13].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[14].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[15].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[16].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[17].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[18].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[19].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[20].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[21].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[22].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[23].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[24].generate()
 
 """ def draw_building(x, y, z, width, height, depth):
     glColor3f(0.8, 0.8, 0.8)
@@ -221,6 +221,7 @@ def Init():
             draw_street(i, j - 50, i, j + 50, 5) """
 
 def displayobj():
+    
     glPushMatrix()  
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(173.0, 0.0, 3.0)
@@ -477,7 +478,6 @@ def displayobj():
     glPopMatrix()
 
 
-
 def display():  
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     Axis()
@@ -489,6 +489,7 @@ def display():
     glVertex3d(DimBoard, 0, DimBoard)
     glVertex3d(DimBoard, 0, -DimBoard)
     glEnd()
+
     #draw_city()
 
     for obj in carros:
@@ -668,6 +669,7 @@ class Ciudad(ap.Model):
     def step(self):
         handle_keys()
         display()
+        displayobj()
         
         pygame.display.flip()
         pygame.time.wait(10)
@@ -691,7 +693,6 @@ parameters = {
 
 model = Ciudad(parameters)
 model.run()
-
 
 # print("Clases en la ontología:")
 # for cls in onto.classes():
