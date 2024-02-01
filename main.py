@@ -375,8 +375,12 @@ class Ciudad(ap.Model):
        pygame.quit()
        sys.exit()
 
-modelo = Ciudad()
-modelo.run()
+parameters = {
+   "steps": 5000
+}
+
+model = Ciudad(parameters)
+model.run()
 
 
 # print("Clases en la ontología:")
