@@ -54,6 +54,9 @@ theta = 0.0
 radius = DimBoard + 20
 
 objetos = []
+#Arreglo para el manejo de texturas
+textures = []
+filename1 = "TC2008B/textura0.jpeg"
 
 pygame.init()
 
@@ -91,6 +94,20 @@ def lookat():
     glLoadIdentity()
     gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z)
 
+def Texturas(filepath):
+    textures.append(glGenTextures(1))
+    id = len(textures) - 1
+    glBindTexture(GL_TEXTURE_2D, textures[id])
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, GL_CLAMP)
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T, GL_CLAMP)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    image = pygame.image.load(filepath).convert()
+    w, h = image.get_rect().size
+    image_data = pygame.image.tostring(image,"RGBA")
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data)
+    glGenerateMipmap(GL_TEXTURE_2D)
+    
 def Init():
     screen = pygame.display.set_mode(
         (screen_width, screen_height), DOUBLEBUF | OPENGL)
@@ -107,6 +124,8 @@ def Init():
     glEnable(GL_DEPTH_TEST)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
+    Texturas(filename1)
+    
     glLightfv(GL_LIGHT0, GL_POSITION,  (0, 200, 0, 0.0))
     glLightfv(GL_LIGHT0, GL_AMBIENT, (0.5, 0.5, 0.5, 1.0))
     glLightfv(GL_LIGHT0, GL_DIFFUSE, (0.5, 0.5, 0.5, 1.0))
@@ -528,23 +547,39 @@ def displayobj():
 
 
 
-
+def PlanoTexturizado():
+    #Activate textures
+    glColor3f(1.0,1.0,1.0)
+    glEnable(GL_TEXTURE_2D)
+    #front face
+    glBindTexture(GL_TEXTURE_2D, textures[0])    
+    glBegin(GL_QUADS)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3d(-DimBoard, 0, -DimBoard)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3d(-DimBoard, 0, DimBoard)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3d(DimBoard, 0, DimBoard)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3d(DimBoard, 0, -DimBoard)
+    glEnd()              
+    glDisable(GL_TEXTURE_2D)
 
 
 def display():  
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     Axis()
-    #Se dibuja el plano gris
+    PlanoTexturizado()
+    displayobj()
+    #draw_city()
+'''    #Se dibuja el plano gris
     glColor3f(0.3, 0.3, 0.3)
     glBegin(GL_QUADS)
     glVertex3d(-DimBoard, 0, -DimBoard)
     glVertex3d(-DimBoard, 0, DimBoard)
     glVertex3d(DimBoard, 0, DimBoard)
     glVertex3d(DimBoard, 0, -DimBoard)
-    glEnd()
-    #draw_city()
-
-    displayobj()
+    glEnd()'''
 
 def handle_keys():
     global CENTER_X, CENTER_Y, CENTER_Z, EYE_Y, theta
