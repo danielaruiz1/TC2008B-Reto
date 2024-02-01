@@ -127,7 +127,7 @@ def Init():
     objetos.append(OBJ("Objetos/Semaforo4.obj"))
     objetos[2].generate()
 
-    carros.append(Carro(1))
+    # carros.append(Carro(1))
 
 
 def draw_building(x, y, z, width, height, depth):
@@ -504,8 +504,8 @@ def display():
 
     #draw_city()
 
-    for obj in carros:
-       obj.draw()
+    # for obj in carros:
+    #    obj.draw()
        #obj.update()
 
 def handle_keys():
@@ -607,7 +607,7 @@ with onto:
     
     onto.save()
 
-class Car(ap.Agent):
+class CarAgent(ap.Agent):
    
     def see(self, e):
         pass
@@ -639,28 +639,20 @@ class Car(ap.Agent):
     #======================Funciones Principales=======================
 
     def setup(self):
-        pass
-
-    def update(self):
-       pass
-
-    def end(self):
-       pass
-   
-class Peaton(ap.Agent):
-    def setup(self):
+        self.carro = None
         pass
 
     def step(self):
+       self.carro.draw()
        pass
 
     def update(self):
        pass
 
     def end(self):
-       pass   
+       pass
 
-class Semaforo(ap.Agent):
+class SemaforoAgent(ap.Agent):
     def setup(self):
         pass
 
@@ -676,12 +668,19 @@ class Semaforo(ap.Agent):
 class Ciudad(ap.Model):
     def setup(self):
         Init()
+        self.carros = ap.AgentList(self, self.p.carros, CarAgent)
+
+        for agente in self.carros:
+            agente.carro = Carro(1)
         pass
 
     def step(self):
         handle_keys()
         display()
         displayobj()
+
+        for carro in self.carros:
+           carro.step()
         
         pygame.display.flip()
         pygame.time.wait(10)
@@ -700,7 +699,8 @@ class Ciudad(ap.Model):
        sys.exit()
 
 parameters = {
-   "steps": 5000
+   "steps": 5000,
+   "carros": 1
 }
 
 model = Ciudad(parameters)
