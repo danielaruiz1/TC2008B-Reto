@@ -11,7 +11,6 @@ from owlready2 import *
 import itertools
 import random
 import IPython
-import math
 
 # Cargamos las bibliotecas de OpenGL
 from OpenGL.GL import *
@@ -20,7 +19,9 @@ from OpenGL.GLUT import *
 
 # Se carga el archivo de la clase Cubo
 import sys, math
-sys.path.append('..')
+sys.path.append('Clases')
+from Clases.Carro import Carro
+
 #from Ciudad import Ciudad
 
 from objloader import *
@@ -55,6 +56,7 @@ DimBoard = 200
 theta = 0.0
 radius = DimBoard + 20
 
+carros = []
 objetos = []
 
 ontologia_file_path = "pFinal_onto.owl"
@@ -118,8 +120,9 @@ def Init():
     glEnable(GL_LIGHT0)
     glEnable(GL_COLOR_MATERIAL)
     glShadeModel(GL_SMOOTH)# most obj files expect to be smooth-shaded        
-    objetos.append(OBJ("Objetos/Semaforo4.obj", swapyz=True))
-    objetos[0].generate()
+    
+    carros.append(Carro(1))
+
 
 """ def draw_building(x, y, z, width, height, depth):
     glColor3f(0.8, 0.8, 0.8)
@@ -166,16 +169,6 @@ def Init():
             # Draw streets along z-axis
             draw_street(i, j - 50, i, j + 50, 5) """
 
-def displayobj():
-    glPushMatrix()  
-    #correcciones para dibujar el objeto en plano XZ
-    #esto depende de cada objeto
-    glRotatef(-90.0, 1.0, 0.0, 0.0)
-    glTranslatef(0.0, 0.0, 15.0)
-    glScale(10.0,10.0,10.0)
-    objetos[0].render()  
-    glPopMatrix()
-
 def display():  
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     Axis()
@@ -189,7 +182,9 @@ def display():
     glEnd()
     #draw_city()
 
-    displayobj()
+    for obj in carros:
+       obj.draw()
+       #obj.update()
 
 def handle_keys():
     global CENTER_X, CENTER_Y, CENTER_Z, EYE_Y, theta
@@ -212,9 +207,8 @@ if os.path.exists(ontologia_file_path):
     os.remove(ontologia_file_path)
     print(f"Archivo {ontologia_file_path} existente eliminado.")
 
-    
 onto = get_ontology("file://./pFinal_onto.owl")
-
+#Definicion de Ontologia
 with onto:
 
     #My SuperClass
@@ -291,9 +285,85 @@ with onto:
     
     onto.save()
 
-class Car(ap.agent):
-   def setup(self):
-      self.agentType = 0
+class Car(ap.Agent):
+   
+    def see(self, e):
+        pass
+    
+    def brf(self, p):
+       pass
+
+    def options(self):
+       pass
+
+    def filter(self):
+       pass
+
+    def plan(self):
+       pass
+
+    def BDI(self, p):
+       pass
+
+    def execute(self):
+       pass
+
+    def initBeliefs(self, initPos):
+       pass
+
+    def initIntentions(self):
+       pass
+
+    #======================Funciones Principales=======================
+
+    def setup(self):
+        pass
+
+    def update(self):
+       pass
+
+    def end(self):
+       pass
+   
+class Peaton(ap.Agent):
+    def setup(self):
+        pass
+
+    def step(self):
+       pass
+
+    def update(self):
+       pass
+
+    def end(self):
+       pass   
+
+class Semaforo(ap.Agent):
+    def setup(self):
+        pass
+
+    def step(self):
+       pass
+
+    def update(self):
+       pass
+
+    def end(self):
+       pass
+
+class Ciudad(ap.Model):
+    def setup(self):
+        pass
+
+    def step(self):
+       pass
+
+    def update(self):
+       pass
+
+    def end(self):
+       pass
+
 
 done = False
 Init()
