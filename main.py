@@ -373,7 +373,7 @@ class Ciudad(ap.Model):
 
     def end(self):
        pygame.quit()
-       self.close()
+       sys.exit()
 
 modelo = Ciudad()
 modelo.run()
