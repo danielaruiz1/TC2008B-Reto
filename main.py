@@ -56,7 +56,6 @@ DimBoard = 200
 theta = 0.0
 radius = 90
 
-carros = []
 objetos = []
 
 ontologia_file_path = "pFinal_onto.owl"
@@ -127,9 +126,6 @@ def Init():
     objetos.append(OBJ("Objetos/Semaforo4.obj"))
     objetos[2].generate()
 
-    # carros.append(Carro(1))
-
-
 def draw_building(x, y, z, width, height, depth):
     glColor3f(0.8, 0.8, 0.8)
     glBegin(GL_QUADS)
@@ -153,27 +149,6 @@ def draw_building(x, y, z, width, height, depth):
     glVertex3f(x + width / 2, y + height, z + depth / 2)
     glVertex3f(x + width / 2, y, z + depth / 2)
     glEnd()
-
-""" def draw_street(x1, z1, x2, z2, width):
-    glColor3f(0.5, 0.5, 0.5)
-    glLineWidth(width)
-    glBegin(GL_LINES)
-    glVertex3f(x1, 0.1, z1)
-    glVertex3f(x2, 0.1, z2)
-    glEnd()
-    glLineWidth(1.0) """
-
-""" def draw_city():
-    for i in range(-DimBoard + 50, DimBoard - 50, 100):
-        for j in range(-DimBoard + 50, DimBoard - 50, 100):
-            building_height = 50 + abs(i % 150) + abs(j % 150)
-            draw_building(i, 0, j, 40, building_height, 40)
-
-            # Draw streets along x-axis
-            draw_street(i - 50, j, i + 50, j, 5)
-
-            # Draw streets along z-axis
-            draw_street(i, j - 50, i, j + 50, 5) """
 
 def displayobj():
     glPushMatrix()  
@@ -502,11 +477,6 @@ def display():
     glVertex3d(DimBoard, 0, -DimBoard)
     glEnd()
 
-    #draw_city()
-
-    # for obj in carros:
-    #    obj.draw()
-       #obj.update()
 
 def handle_keys():
     global CENTER_X, CENTER_Y, CENTER_Z, EYE_Y, theta
@@ -524,6 +494,14 @@ def handle_keys():
         else:
             theta += 1.0
         lookat()
+    if keys[pygame.K_UP]:
+        EYE_Y += 1.0
+        glLoadIdentity()
+        gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z)
+    if keys[pygame.K_DOWN]:
+        EYE_Y -= 1.0
+        glLoadIdentity()
+        gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z)
 
 if os.path.exists(ontologia_file_path):
     os.remove(ontologia_file_path)
@@ -535,19 +513,16 @@ with onto:
 
     #My SuperClass
     class Entity(Thing):
-      pass
+        pass
 
     class Car(Entity):
-      pass
+        pass
 
     class Traffic_light(Entity):
-      pass
-
-    class Pedestrian(Entity):
-      pass
+        pass
 
     class Place(Thing):
-      pass
+        pass
 
     #Propiedad que especifica la posicion del objeto
     class at_position(DataProperty,FunctionalProperty):
@@ -563,11 +538,6 @@ with onto:
     #Velocidad del carro
     class has_speed_car(DataProperty):
       domain = [Car]
-      range = [float]
-
-    #Velocidad del peaton
-    class has_speed_pedestrian(DataProperty):
-      domain = [Pedestrian]
       range = [float]
 
     #Propiedad para describir los carros que tenga adelante
@@ -593,21 +563,17 @@ with onto:
       inverse_property = controls_traffic_light
       cardinality = [0, 1]
 
-    class pedestrians_at_crosswalk(ObjectProperty):
-        domain = [Traffic_light]
-        range = [Pedestrian]
-        cardinality = [0, None]
-
-    #Relación entre peatones y semáforos
-    class crosswalks_at(ObjectProperty):
-        domain = [Pedestrian]
-        range = [Traffic_light]
-        inverse_property = pedestrians_at_crosswalk
-        cardinality = [0, 1]
-    
     onto.save()
 
 class CarAgent(ap.Agent):
+
+    def suscribe_traffic_light(self, tl):
+        self.msg = None
+        tl.carros_suscritos.append(self)
+        pass
+
+    def check_traffic_light(self, msg):
+        self.msg = msg
    
     def see(self, e):
         pass
@@ -640,9 +606,12 @@ class CarAgent(ap.Agent):
 
     def setup(self):
         self.carro = None
+        self.msg = None
+        self.moving = True
         pass
 
     def step(self):
+       # Dibujo del carro
        self.carro.draw()
        pass
 
@@ -653,11 +622,35 @@ class CarAgent(ap.Agent):
        pass
 
 class SemaforoAgent(ap.Agent):
+
+    def notify(self, mensaje):
+        for carro in self.carros_suscritos:
+            carro.check_traffic_light(mensaje)
+        pass
+
     def setup(self):
+        self.semaforo = None
+        self.estado = 0 # 0 = rojo, 1 = amarillo, 2 = verde
+        self.tiempo_cambio = 0.0
+        self.carros_suscritos = []
         pass
 
     def step(self):
-       pass
+    
+        if(self.tiempo_cambio == 30):
+            self.estado = 2
+        elif(self.tiempo_cambio == 60):
+            self.estado = 1
+        elif(self.tiempo_cambio == 70):
+            self.estado = 0
+            self.tiempo_cambio = 0
+
+        self.tiempo_cambio += 1.0
+
+        mensaje = self.estado
+        self.notify(mensaje)
+       
+        pass
 
     def update(self):
        pass
@@ -667,12 +660,15 @@ class SemaforoAgent(ap.Agent):
 
 class Ciudad(ap.Model):
     def setup(self):
+        # Se inicializa todas las variables de control
         Init()
+        # Se generan los agentes junto con su instancia de carro
         self.carros = ap.AgentList(self, self.p.carros, CarAgent)
-
         for agente in self.carros:
             agente.carro = Carro(1)
         pass
+
+        
 
     def step(self):
         handle_keys()

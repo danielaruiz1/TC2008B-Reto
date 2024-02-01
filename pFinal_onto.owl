@@ -30,18 +30,6 @@
   <owl:inverseOf rdf:resource="#controls_traffic_light"/>
 </owl:ObjectProperty>
 
-<owl:ObjectProperty rdf:about="#pedestrians_at_crosswalk">
-  <rdfs:domain rdf:resource="#Traffic_light"/>
-  <rdfs:range rdf:resource="#Pedestrian"/>
-  <owl:inverseOf rdf:resource="#crosswalks_at"/>
-</owl:ObjectProperty>
-
-<owl:ObjectProperty rdf:about="#crosswalks_at">
-  <rdfs:domain rdf:resource="#Pedestrian"/>
-  <rdfs:range rdf:resource="#Traffic_light"/>
-  <owl:inverseOf rdf:resource="#pedestrians_at_crosswalk"/>
-</owl:ObjectProperty>
-
 <owl:DatatypeProperty rdf:about="#at_position">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   <rdfs:domain rdf:resource="#Place"/>
@@ -58,11 +46,6 @@
   <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
 </owl:DatatypeProperty>
 
-<owl:DatatypeProperty rdf:about="#has_speed_pedestrian">
-  <rdfs:domain rdf:resource="#Pedestrian"/>
-  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
-</owl:DatatypeProperty>
-
 <owl:Class rdf:about="#Entity">
   <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
 </owl:Class>
@@ -72,10 +55,6 @@
 </owl:Class>
 
 <owl:Class rdf:about="#Traffic_light">
-  <rdfs:subClassOf rdf:resource="#Entity"/>
-</owl:Class>
-
-<owl:Class rdf:about="#Pedestrian">
   <rdfs:subClassOf rdf:resource="#Entity"/>
 </owl:Class>
 
