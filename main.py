@@ -1,4 +1,4 @@
-#
+# 
 import pygame
 from pygame.locals import *
 
@@ -53,6 +53,7 @@ DimBoard = 200
 theta = 0.0
 radius = DimBoard + 20
 
+#Arreglo para objetos
 objetos = []
 
 pygame.init()
@@ -113,57 +114,12 @@ def Init():
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
     glEnable(GL_COLOR_MATERIAL)
-    glShadeModel(GL_SMOOTH)           # most obj files expect to be smooth-shaded        
+    glShadeModel(GL_SMOOTH)           # most obj files expect to be smooth-shaded      
+    
     objetos.append(OBJ("TC2008B-Reto/Objetos/SuperRoad.obj", swapyz=True))
     objetos[0].generate()
     objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
     objetos[1].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[2].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[3].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/SuperRoad.obj", swapyz=True))
-    objetos[4].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[5].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[6].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[7].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/SuperRoad.obj", swapyz=True))
-    objetos[8].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[9].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[10].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[11].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[12].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[13].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[14].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[15].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[16].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[17].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[18].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[19].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[20].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[21].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[22].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[23].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
-    objetos[24].generate()
 
 """ def draw_building(x, y, z, width, height, depth):
     glColor3f(0.8, 0.8, 0.8)
@@ -229,49 +185,42 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(65.0, 0.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[2].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(12.0, 0.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[3].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(-41.0, 0.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[4].render()  
+    objetos[0].render()  
     glPopMatrix()
 
     glPushMatrix()  
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(-94.0, 0.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[5].render()  
-    glPopMatrix()
-
-    glPushMatrix()  
-    glRotatef(-90.0, 1.0, 0.0, 0.0)
-    glTranslatef(-94.0, 0.0, 3.0)
-    glScale(6.0,6.0,6.0)
-    objetos[6].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(-120.0, 0.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[6].render()  
+    objetos[1].render()  
     glPopMatrix()
     
     glPushMatrix()  
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(-173.0, 0.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[8].render()  
+    objetos[0].render()  
     glPopMatrix()
     
     glPushMatrix()  
@@ -279,7 +228,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(55.0, 173.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[9].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -287,7 +236,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(110.0, 173.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[10].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -295,7 +244,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(165.0, 173.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[11].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -303,7 +252,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(173.0, 173.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[12].render()  
+    objetos[1].render()  
     glPopMatrix()
     
     glPushMatrix()  
@@ -311,7 +260,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(-55.0, 173.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[13].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -319,7 +268,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(-110.0, 173.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[14].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -327,7 +276,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(-165.0, 173.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[15].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -335,7 +284,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(-173.0, 173.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[16].render()  
+    objetos[1].render()  
     glPopMatrix()
     
     glPushMatrix()  
@@ -343,7 +292,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(55.0, -41.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[9].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -351,7 +300,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(110.0, -41.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[10].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -359,7 +308,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(165.0, -41.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[11].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -367,7 +316,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(173.0, -41.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[12].render()  
+    objetos[1].render()  
     glPopMatrix()
     
     glPushMatrix()  
@@ -375,7 +324,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(-55.0, -41.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[13].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -383,7 +332,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(-110.0, -41.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[14].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -391,7 +340,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(-165.0, -41.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[15].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -399,7 +348,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(-173.0, -41.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[16].render()  
+    objetos[1].render()  
     glPopMatrix()
     
     glPushMatrix()  
@@ -407,7 +356,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(55.0, -173.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[9].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -415,7 +364,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(110.0, -173.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[10].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -423,7 +372,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(165.0, -173.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[11].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -431,7 +380,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(173.0, -173.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[12].render()  
+    objetos[1].render()  
     glPopMatrix()
     
     glPushMatrix()  
@@ -439,7 +388,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(-55.0, -173.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[13].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -447,7 +396,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(-110.0, -173.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[14].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -455,7 +404,7 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(-165.0, -173.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[15].render()  
+    objetos[1].render()  
     glPopMatrix()
 
     glPushMatrix()  
@@ -463,10 +412,8 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(-173.0, -173.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[16].render()  
+    objetos[1].render()  
     glPopMatrix()
-
-
 
 def display():  
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -480,7 +427,6 @@ def display():
     glVertex3d(DimBoard, 0, -DimBoard)
     glEnd()
     #draw_city()
-
     displayobj()
 
 def handle_keys():
