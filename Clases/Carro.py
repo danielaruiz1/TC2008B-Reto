@@ -17,15 +17,17 @@ class Carro:
 
     def __init__(self, vel):
         self.vel = vel
+        self.Rotation = 0.0  # Nueva propiedad para almacenar la rotación
+        self.has_rotated = False  # Nueva propiedad para rastrear si ya ha rotado
         self.Position = []
-        self.Position.append(1)
-        self.Position.append(1)
-        self.Position.append(1)
+        self.Position.append(0)
+        self.Position.append(0)
+        self.Position.append(5)
         
         self.Direction = []
-        self.Direction.append(random.random())
-        self.Direction.append(10)
-        self.Direction.append(random.random())
+        self.Direction.append(random.uniform(0.5, 1.0))
+        self.Direction.append(random.uniform(0.5, 1.0))
+        self.Direction.append(5)
 
         m = math.sqrt(self.Direction[0]*self.Direction[0] + self.Direction[2]*self.Direction[2])
         self.Direction[0] /= m
@@ -43,22 +45,30 @@ class Carro:
         except Exception as e:
             print(f"Error al cargar el objeto: {e}")
         
+    def rotate(self, angle):
+        glRotatef(angle, 0.0, 0.0, 1.0)
+    
     def draw(self):
         glPushMatrix()  
-        #correcciones para dibujar el objeto en plano XZ
-        #esto depende de cada objeto
-        glRotatef(-90.0, 1.0, 0.0, 0.0)
-        glTranslatef(0.0, 0.0, 5.0)
-        glScale(2.0,2.0,2.0)
-        self.objeto.render()  
-        glPopMatrix()
-    
-    # def update(self):
-    #     new_x = self.Position[0] + self.Direction[0]
-    #     new_z = self.Position[2] + self.Direction[2]
 
-    #     self.Position[0] = new_x
-    #     self.Position[2] = new_z
+        # Traslación sin cambios en el eje Z
+        glRotatef(-90.0, 1.0, 0.0, 0.0)
+        glTranslatef(self.Position[0], self.Position[1], 5.0)
+        glScalef(2.0, 2.0, 2.0)
+        glRotatef(self.Rotation, 0.0, 0.0, 1.0)
+        self.objeto.render()  
+
+        glPopMatrix()
+        self.update()
+    
+    def update(self):
+        new_x = self.Position[0] + self.Direction[0]
+        new_y = self.Position[1] + self.Direction[1]
+        
+        self.Position[0] = new_x
+        self.Position[1] = new_y
+
+    
 
 
 

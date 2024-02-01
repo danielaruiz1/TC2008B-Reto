@@ -11,6 +11,7 @@ from owlready2 import *
 import itertools
 import random
 import IPython
+import numpy as np
 
 # Cargamos las bibliotecas de OpenGL
 from OpenGL.GL import *
@@ -54,11 +55,13 @@ Z_MAX=500
 DimBoard = 200
 #Variables para el control del observador
 theta = 0.0
-radius = 90
+radius = 100
 
 objetos = []
 
 ontologia_file_path = "pFinal_onto.owl"
+
+posiciones_entradas = np.array([[-220, -8],[220, 8],[-35, -220], [-48, 220], [-180, 220],[-166, -220], [166, 220], [180, -220]])
 
 pygame.init()
 
@@ -464,7 +467,6 @@ def displayobj():
     #draw_building(-190.0, 0.0, -40.0, 20, 100, 30)
     #draw_building(155.0, 0.0, -40.0, 30, 70, 30)
 
-
 def display():  
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     Axis()
@@ -476,7 +478,6 @@ def display():
     glVertex3d(DimBoard, 0, DimBoard)
     glVertex3d(DimBoard, 0, -DimBoard)
     glEnd()
-
 
 def handle_keys():
     global CENTER_X, CENTER_Y, CENTER_Z, EYE_Y, theta
@@ -549,7 +550,6 @@ with onto:
     class is_in_place(ObjectProperty):
       domain = [Entity]
       range = [Place]
-      pass
 
     class controls_traffic_light(ObjectProperty):
       domain = [Traffic_light]
@@ -608,6 +608,7 @@ class CarAgent(ap.Agent):
         self.carro = None
         self.msg = None
         self.moving = True
+    
         pass
 
     def step(self):
@@ -664,11 +665,39 @@ class Ciudad(ap.Model):
         Init()
         # Se generan los agentes junto con su instancia de carro
         self.carros = ap.AgentList(self, self.p.carros, CarAgent)
-        for agente in self.carros:
+        for i, agente in enumerate(self.carros):
             agente.carro = Carro(1)
-        pass
+            # Asegúrate de que haya suficientes posiciones en la lista
+            if i < len(posiciones_entradas):
+                x, y = posiciones_entradas[i]
+                # Asigna la posición al carro
+                agente.carro.Position[0] = x
+                agente.carro.Position[1] = y
 
-        
+                if y > 200:
+                    # Aplicar rotación de 180 grados
+                    agente.carro.Rotation = 180.0
+                    agente.carro.has_rotated = True
+                    agente.carro.Direction[0] *= 0
+                    agente.carro.Direction[1] *= -1
+                elif y < -200:
+                    agente.carro.has_rotated = True
+                    agente.carro.Direction[0] *= 0
+                    agente.carro.Direction[1] *= 1
+                elif x > 200:
+                    agente.carro.Rotation = 90.0
+                    agente.carro.has_rotated = True
+                    agente.carro.Direction[0] *= -1
+                    agente.carro.Direction[1] *= 0
+                elif x < -200:
+                    agente.carro.Rotation = -90.0
+                    agente.carro.has_rotated = True
+                    agente.carro.Direction[0] *= 1
+                    agente.carro.Direction[1] *= 0
+
+            else:
+                # O maneja la situación si hay menos posiciones de las esperadas
+                print("No hay suficientes posiciones predefinidas para todos los carros.")
 
     def step(self):
         handle_keys()
@@ -696,7 +725,7 @@ class Ciudad(ap.Model):
 
 parameters = {
    "steps": 5000,
-   "carros": 1
+   "carros": 8
 }
 
 model = Ciudad(parameters)
