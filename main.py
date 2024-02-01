@@ -454,37 +454,83 @@ def displayobj():
     glPopMatrix()
     
     glPushMatrix()  
-    glRotatef(0.0, 0.0, 1.0, 0.0)
-    glTranslatef(-190.0, 0.0, -40.0)
+    glRotatef(-180.0, 0.0, 1.0, 0.0)
+    glTranslatef(190.0, 0.0, 26.0)
+    glScale(10.0, 10.0, 10.0)
+    objetos[2].render()  
+    glPopMatrix()
+    
+    glPushMatrix()  
+    glRotatef(-180.0, 0.0, 1.0, 0.0)
+    glTranslatef(-150.0, 0.0, 26.0)
     glScale(10.0, 10.0, 10.0)
     objetos[2].render()  
     glPopMatrix()
     
     glPushMatrix()  
     glRotatef(0.0, 0.0, 1.0, 0.0)
-    glTranslatef(155.0, 0.0, -40.0)
+    glTranslatef(-150.0, 0.0, -40.0)
     glScale(10.0, 10.0, 10.0)
     objetos[2].render()  
     glPopMatrix()
     
+    glPushMatrix()  
+    glRotatef(0.0, 0.0, 1.0, 0.0)
+    glTranslatef(195.0, 0.0, -40.0)
+    glScale(10.0, 10.0, 10.0)
+    objetos[2].render()  
+    glPopMatrix()
+    
+    glPushMatrix()  
+    glRotatef(0.0, 0.0, 1.0, 0.0)
+    glTranslatef(-20.0, 0.0, -40.0)
+    glScale(10.0, 10.0, 10.0)
+    objetos[2].render()  
+    glPopMatrix()
+    
+    
     #edificio 1
-    draw_building(50.0, 0.0, 55.0, 30, 105, 30)
-    draw_building(50.0, 0.0, 60.0, 30, 80, 30)
-    draw_building(50.0, 0.0, 70.0, 30, 70, 30)
+    draw_building(70.0, 0.0, 55.0, 30, 105, 30)
+    draw_building(70.0, 0.0, 60.0, 30, 80, 30)
+    draw_building(70.0, 0.0, 70.0, 30, 70, 30)
     #edificio 2
-    draw_building(-75.0, 0.0, -55.0, 30, 105, 30)
-    draw_building(-75.0, 0.0, -60.0, 30, 80, 30)
-    draw_building(-75.0, 0.0, -70.0, 30, 70, 30)
+    draw_building(-95.0, 0.0, -55.0, 30, 105, 30)
+    draw_building(-95.0, 0.0, -60.0, 30, 80, 30)
+    draw_building(-95.0, 0.0, -70.0, 30, 70, 30)
+    
+    #edificio 2
+    draw_building(-105.0, 0.0, 105.0, 30, 105, 30)
+    draw_building(-105.0, 0.0, 110.0, 30, 80, 30)
+    draw_building(-105.0, 0.0, 120.0, 30, 70, 30)
+    
     
     #set de edificios 1
-    draw_building(50.0, 0.0, -40.0, 30, 105, 20)
-    draw_building(70.0, 0.0, -40.0, 30, 80, 20)
-    draw_building(90.0, 0.0, -40.0, 30, 70, 20)
+    draw_building(70.0, 0.0, -40.0, 30, 105, 20)
+    draw_building(90.0, 0.0, -40.0, 30, 80, 20)
+    draw_building(110.0, 0.0, -40.0, 30, 70, 20)
     
     #set de edificios 2
-    draw_building(-70.0, 0.0, 40.0, 30, 105, 20)
-    draw_building(-90.0, 0.0, 40.0, 30, 80, 20)
-    draw_building(-110.0, 0.0, 40.0, 30, 70, 20)
+    draw_building(-90.0, 0.0, 40.0, 30, 105, 20)
+    draw_building(-110.0, 0.0, 40.0, 30, 80, 20)
+    draw_building(-130.0, 0.0, 40.0, 30, 70, 20)
+    
+    #set de edificios 3
+    draw_building(20.0, 0.0, 60.0, 30, 105, 20)
+    draw_building(20.0, 0.0, -60.0, 30, 80, 20)
+    draw_building(20.0, 0.0, -90.0, 30, 80, 20)
+    draw_building(20.0, 0.0, -120.0, 30, 80, 20)
+    draw_building(20.0, 0.0, 40.0, 30, 70, 20)
+    
+    #set de edificios 4
+    draw_building(120.0, 0.0, -90.0, 30, 105, 20)
+    draw_building(120.0, 0.0, -90.0, 30, 80, 20)
+    draw_building(120.0, 0.0, -90.0, 30, 70, 20)
+    
+    #set de edificios 5
+    draw_building(110.0, 0.0, 110.0, 30, 105, 20)
+    draw_building(110.0, 0.0, 130.0, 30, 80, 20)
+    draw_building(110.0, 0.0, 150.0, 30, 70, 20)
+    
     
     #draw_building(60.0, 0.0, 26.0, 20, 85, 30)
     #draw_building(-190.0, 0.0, -40.0, 20, 100, 30)
