@@ -43,7 +43,6 @@ class Carro:
         except Exception as e:
             print(f"Error al cargar el objeto: {e}")
         
-        
     def draw(self):
         glPushMatrix()  
         #correcciones para dibujar el objeto en plano XZ

@@ -54,7 +54,7 @@ Z_MAX=500
 DimBoard = 200
 #Variables para el control del observador
 theta = 0.0
-radius = 60
+radius = 90
 
 carros = []
 objetos = []
@@ -126,50 +126,6 @@ def Init():
     objetos[1].generate()
     objetos.append(OBJ("Objetos/Semaforo4.obj"))
     objetos[2].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[3].generate()
-    objetos.append(OBJ("Objetos/SuperRoad.obj", swapyz=True))
-    objetos[4].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[5].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[6].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[7].generate()
-    objetos.append(OBJ("Objetos/SuperRoad.obj", swapyz=True))
-    objetos[8].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[9].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[10].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[11].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[12].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[13].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[14].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[15].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[16].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[17].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[18].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[19].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[20].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[21].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[22].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[23].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
-    objetos[24].generate()
 
     carros.append(Carro(1))
 
@@ -220,7 +176,6 @@ def draw_building(x, y, z, width, height, depth):
             draw_street(i, j - 50, i, j + 50, 5) """
 
 def displayobj():
-    
     glPushMatrix()  
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(173.0, 0.0, 3.0)
@@ -490,6 +445,27 @@ def displayobj():
     objetos[2].render()  
     glPopMatrix()
     
+    glPushMatrix()  
+    glRotatef(-180.0, 0.0, 1.0, 0.0)
+    glTranslatef(60.0, 0.0, 26.0)
+    glScale(10.0, 10.0, 10.0)
+    objetos[2].render()  
+    glPopMatrix()
+    
+    glPushMatrix()  
+    glRotatef(0.0, 0.0, 1.0, 0.0)
+    glTranslatef(-190.0, 0.0, -40.0)
+    glScale(10.0, 10.0, 10.0)
+    objetos[2].render()  
+    glPopMatrix()
+    
+    glPushMatrix()  
+    glRotatef(0.0, 0.0, 1.0, 0.0)
+    glTranslatef(155.0, 0.0, -40.0)
+    glScale(10.0, 10.0, 10.0)
+    objetos[2].render()  
+    glPopMatrix()
+    
     #edificio 1
     draw_building(50.0, 0.0, 55.0, 30, 105, 30)
     draw_building(50.0, 0.0, 60.0, 30, 80, 30)
@@ -512,9 +488,6 @@ def displayobj():
     #draw_building(60.0, 0.0, 26.0, 20, 85, 30)
     #draw_building(-190.0, 0.0, -40.0, 20, 100, 30)
     #draw_building(155.0, 0.0, -40.0, 30, 70, 30)
-
-
-
 
 
 def display():  
