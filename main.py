@@ -359,6 +359,7 @@ class Ciudad(ap.Model):
     def step(self):
         handle_keys()
         display()
+        
         pygame.display.flip()
         pygame.time.wait(10)
 

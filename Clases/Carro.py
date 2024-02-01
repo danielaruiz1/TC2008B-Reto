@@ -16,6 +16,7 @@ from objloader import *
 class Carro:
 
     def __init__(self, vel):
+        self.vel = vel
         self.Position = []
         self.Position.append(1)
         self.Position.append(100)
