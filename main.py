@@ -353,37 +353,36 @@ class Semaforo(ap.Agent):
 
 class Ciudad(ap.Model):
     def setup(self):
+        Init()
         pass
 
     def step(self):
-       pass
+        handle_keys()
+        display()
+        pygame.display.flip()
+        pygame.time.wait(10)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.end()
+
+        pass
 
     def update(self):
        pass
 
     def end(self):
-       pass
+       pygame.quit()
+       self.close()
+
+modelo = Ciudad()
+modelo.run()
 
 
-done = False
-Init()
-while not done:
-    handle_keys()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            done = True
+# print("Clases en la ontología:")
+# for cls in onto.classes():
+#     print(cls)
 
-    display()
-
-    pygame.display.flip()
-    pygame.time.wait(10)
-
-print("Clases en la ontología:")
-for cls in onto.classes():
-    print(cls)
-
-print("\nPropiedades en la ontología:")
-for prop in onto.properties():
-    print(prop)
-
-pygame.quit()
+# print("\nPropiedades en la ontología:")
+# for prop in onto.properties():
+#     print(prop)
