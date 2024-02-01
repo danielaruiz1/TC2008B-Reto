@@ -114,14 +114,24 @@ def Init():
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
     glEnable(GL_COLOR_MATERIAL)
+<<<<<<< HEAD
     glShadeModel(GL_SMOOTH)           # most obj files expect to be smooth-shaded      
     
     objetos.append(OBJ("TC2008B-Reto/Objetos/SuperRoad.obj", swapyz=True))
+=======
+    glShadeModel(GL_SMOOTH)           # most obj files expect to be smooth-shaded        
+    objetos.append(OBJ("Objetos/SuperRoad.obj", swapyz=True))
+>>>>>>> 446bcf10fb43e6f71d64dab882bbe82654ac92c2
     objetos[0].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
     objetos[1].generate()
+<<<<<<< HEAD
+=======
+    objetos.append(OBJ("Objetos/Semaforo4.obj"))
+    objetos[2].generate()
+>>>>>>> 446bcf10fb43e6f71d64dab882bbe82654ac92c2
 
-""" def draw_building(x, y, z, width, height, depth):
+def draw_building(x, y, z, width, height, depth):
     glColor3f(0.8, 0.8, 0.8)
     glBegin(GL_QUADS)
     glVertex3f(x - width / 2, y, z - depth / 2)
@@ -143,7 +153,7 @@ def Init():
     glVertex3f(x + width / 2, y + height, z - depth / 2)
     glVertex3f(x + width / 2, y + height, z + depth / 2)
     glVertex3f(x + width / 2, y, z + depth / 2)
-    glEnd() """
+    glEnd()
 
 """ def draw_street(x1, z1, x2, z2, width):
     glColor3f(0.5, 0.5, 0.5)
@@ -414,6 +424,74 @@ def displayobj():
     glScale(6.0,6.0,6.0)
     objetos[1].render()  
     glPopMatrix()
+    
+    glPushMatrix()  
+    glRotatef(-90.0, 0.0, 1.0, 0.0)
+    glTranslatef(20.0, 0.0, 15.0)
+    glScale(10.0, 10.0, 10.0)
+    objetos[2].render()  
+    glPopMatrix()
+    
+    glPushMatrix()  
+    glRotatef(-90.0, 0.0, 1.0, 0.0)
+    glTranslatef(20.0, 0.0, -186.0)
+    glScale(10.0, 10.0, 10.0)
+    objetos[2].render()  
+    glPopMatrix()
+    
+    glPushMatrix()  
+    glRotatef(-90.0, 0.0, 1.0, 0.0)
+    glTranslatef(20.0, 0.0, 156.0)
+    glScale(10.0, 10.0, 10.0)
+    objetos[2].render()  
+    glPopMatrix()
+    
+    glPushMatrix()  
+    glRotatef(-180.0, 0.0, 1.0, 0.0)
+    glTranslatef(60.0, 0.0, 26.0)
+    glScale(10.0, 10.0, 10.0)
+    objetos[2].render()  
+    glPopMatrix()
+    
+    glPushMatrix()  
+    glRotatef(0.0, 0.0, 1.0, 0.0)
+    glTranslatef(-190.0, 0.0, -40.0)
+    glScale(10.0, 10.0, 10.0)
+    objetos[2].render()  
+    glPopMatrix()
+    
+    glPushMatrix()  
+    glRotatef(0.0, 0.0, 1.0, 0.0)
+    glTranslatef(155.0, 0.0, -40.0)
+    glScale(10.0, 10.0, 10.0)
+    objetos[2].render()  
+    glPopMatrix()
+    
+    #edificio 1
+    draw_building(50.0, 0.0, 55.0, 30, 105, 30)
+    draw_building(50.0, 0.0, 60.0, 30, 80, 30)
+    draw_building(50.0, 0.0, 70.0, 30, 70, 30)
+    #edificio 2
+    draw_building(-75.0, 0.0, -55.0, 30, 105, 30)
+    draw_building(-75.0, 0.0, -60.0, 30, 80, 30)
+    draw_building(-75.0, 0.0, -70.0, 30, 70, 30)
+    
+    #set de edificios 1
+    draw_building(50.0, 0.0, -40.0, 30, 105, 20)
+    draw_building(70.0, 0.0, -40.0, 30, 80, 20)
+    draw_building(90.0, 0.0, -40.0, 30, 70, 20)
+    
+    #set de edificios 2
+    draw_building(-70.0, 0.0, 40.0, 30, 105, 20)
+    draw_building(-90.0, 0.0, 40.0, 30, 80, 20)
+    draw_building(-110.0, 0.0, 40.0, 30, 70, 20)
+    
+    #draw_building(60.0, 0.0, 26.0, 20, 85, 30)
+    #draw_building(-190.0, 0.0, -40.0, 20, 100, 30)
+    #draw_building(155.0, 0.0, -40.0, 30, 70, 30)
+
+
+
 
 def display():  
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
