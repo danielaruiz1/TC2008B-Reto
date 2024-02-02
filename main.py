@@ -32,7 +32,7 @@ ZFAR=900.0
 #Variables para definir la posicion del observador
 #gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z)
 EYE_X=300.0
-EYE_Y=200.0
+EYE_Y=100.0
 EYE_Z=300.0
 CENTER_X=0
 CENTER_Y=0
@@ -51,7 +51,7 @@ Z_MAX=500
 DimBoard = 200
 #Variables para el control del observador
 theta = 0.0
-radius = DimBoard + 20
+radius = DimBoard + 10
 
 #Arreglo para objetos
 objetos = []
@@ -584,13 +584,13 @@ def Paredes():
     glBindTexture(GL_TEXTURE_2D, textures[1])
     glBegin(GL_QUADS)
     glTexCoord2f(0.0, 0.0)
-    glVertex3f(-DimBoard, 0, DimBoard)
+    glVertex3f(-DimBoard - 100, 0, DimBoard + 100)
     glTexCoord2f(0.0, 1.0)
-    glVertex3f(-DimBoard, DimBoard * 0.5, DimBoard)
+    glVertex3f(-DimBoard - 100, DimBoard , DimBoard + 100)
     glTexCoord2f(1.0, 1.0)
-    glVertex3f(DimBoard, DimBoard * 0.5, DimBoard)
+    glVertex3f(DimBoard + 100, DimBoard , DimBoard + 100)
     glTexCoord2f(1.0, 0.0)
-    glVertex3f(DimBoard, 0, DimBoard)
+    glVertex3f(DimBoard + 100, 0, DimBoard + 100)
     glEnd()
     glDisable(GL_TEXTURE_2D)
 
@@ -599,13 +599,13 @@ def Paredes():
     glBindTexture(GL_TEXTURE_2D, textures[1])
     glBegin(GL_QUADS)
     glTexCoord2f(0.0, 0.0)
-    glVertex3f(-DimBoard, 0, -DimBoard)
+    glVertex3f(-DimBoard - 100, 0, -DimBoard - 100)
     glTexCoord2f(0.0, 1.0)
-    glVertex3f(-DimBoard, DimBoard * 0.5, -DimBoard)
+    glVertex3f(-DimBoard - 100, DimBoard, -DimBoard - 100)
     glTexCoord2f(1.0, 1.0)
-    glVertex3f(DimBoard, DimBoard * 0.5, -DimBoard)
+    glVertex3f(DimBoard + 100, DimBoard, -DimBoard - 100)
     glTexCoord2f(1.0, 0.0)
-    glVertex3f(DimBoard, 0, -DimBoard)
+    glVertex3f(DimBoard + 100, 0, -DimBoard - 100)
     glEnd()
     glDisable(GL_TEXTURE_2D)
 
@@ -614,13 +614,13 @@ def Paredes():
     glBindTexture(GL_TEXTURE_2D, textures[1])
     glBegin(GL_QUADS)
     glTexCoord2f(0.0, 0.0)
-    glVertex3f(-DimBoard, 0, -DimBoard)
+    glVertex3f(-DimBoard - 100, 0, -DimBoard - 100)
     glTexCoord2f(0.0, 1.0)
-    glVertex3f(-DimBoard, DimBoard * 0.5, -DimBoard)
+    glVertex3f(-DimBoard - 100, DimBoard, -DimBoard - 100)
     glTexCoord2f(1.0, 1.0)
-    glVertex3f(-DimBoard, DimBoard * 0.5, DimBoard)
+    glVertex3f(-DimBoard - 100, DimBoard, DimBoard + 100)
     glTexCoord2f(1.0, 0.0)
-    glVertex3f(-DimBoard, 0, DimBoard)
+    glVertex3f(-DimBoard - 100, 0, DimBoard + 100)
     glEnd()
     glDisable(GL_TEXTURE_2D)
 
@@ -629,21 +629,39 @@ def Paredes():
     glBindTexture(GL_TEXTURE_2D, textures[1])
     glBegin(GL_QUADS)
     glTexCoord2f(0.0, 0.0)
-    glVertex3f(DimBoard, 0, -DimBoard)
+    glVertex3f(DimBoard + 100, 0, -DimBoard - 100)
     glTexCoord2f(0.0, 1.0)
-    glVertex3f(DimBoard, DimBoard * 0.5, -DimBoard)
+    glVertex3f(DimBoard + 100, DimBoard, -DimBoard - 100)
     glTexCoord2f(1.0, 1.0)
-    glVertex3f(DimBoard, DimBoard * 0.5, DimBoard)
+    glVertex3f(DimBoard + 100, DimBoard, DimBoard + 100)
     glTexCoord2f(1.0, 0.0)
-    glVertex3f(DimBoard, 0, DimBoard)
+    glVertex3f(DimBoard + 100, 0, DimBoard + 100)
     glEnd()
     glDisable(GL_TEXTURE_2D)
+
 
 def display():  
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     Axis()
     PlanoTexturizado()
     Paredes()
+    # Pared superior (cielo)
+    glColor3f(0.53, 0.81, 0.92)  # Azul claro
+    glBegin(GL_QUADS)
+    glVertex3d(-DimBoard - 100, DimBoard, -DimBoard - 100)
+    glVertex3d(DimBoard + 100, DimBoard, -DimBoard - 100)
+    glVertex3d(DimBoard + 100, DimBoard, DimBoard + 100)
+    glVertex3d(-DimBoard - 100, DimBoard, DimBoard + 100)
+    glEnd()
+    
+    # # Dibujar el piso verde
+    glColor3f(0.0, 0.8, 0.0)
+    glBegin(GL_QUADS)
+    glVertex3d(-DimBoard - 100, -1, -DimBoard - 100)
+    glVertex3d(-DimBoard - 100, -1, DimBoard + 100)
+    glVertex3d(DimBoard + 100, -1, DimBoard + 100)
+    glVertex3d(DimBoard + 100, -1, -DimBoard - 100)
+    glEnd()
     displayobj()
     #draw_city()
 '''    #Se dibuja el plano gris
