@@ -10,6 +10,9 @@ import matplotlib.pyplot as plt
 from owlready2 import *
 import itertools
 import random
+#import IPython
+import math
+
 import IPython
 import numpy as np
 
@@ -23,7 +26,7 @@ import sys, math
 sys.path.append('Clases')
 from Clases.Carro import Carro
 
-#from Ciudad import Ciudad
+from Clases.Edificio import Edificio
 
 from objloader import *
 
@@ -62,6 +65,10 @@ objetos = []
 ontologia_file_path = "pFinal_onto.owl"
 
 posiciones_entradas = np.array([[-220, -8],[220, 8],[-35, -220], [-48, 220], [-180, 220],[-166, -220], [166, 220], [180, -220]])
+#Arreglo para el manejo de texturas
+textures = []
+filename1 = "Texturas/textura0.jpeg"
+filename2 = "Texturas/textura1.jpeg"
 
 pygame.init()
 
@@ -99,6 +106,20 @@ def lookat():
     glLoadIdentity()
     gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z)
 
+def Texturas(filepath):
+    textures.append(glGenTextures(1))
+    id = len(textures) - 1
+    glBindTexture(GL_TEXTURE_2D, textures[id])
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, GL_CLAMP)
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T, GL_CLAMP)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    image = pygame.image.load(filepath).convert()
+    w, h = image.get_rect().size
+    image_data = pygame.image.tostring(image,"RGBA")
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data)
+    glGenerateMipmap(GL_TEXTURE_2D)
+    
 def Init():
     screen = pygame.display.set_mode(
         (screen_width, screen_height), DOUBLEBUF | OPENGL)
@@ -115,6 +136,9 @@ def Init():
     glEnable(GL_DEPTH_TEST)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
+    Texturas(filename1)
+    Texturas(filename2)
+    
     glLightfv(GL_LIGHT0, GL_POSITION,  (0, 200, 0, 0.0))
     glLightfv(GL_LIGHT0, GL_AMBIENT, (0.5, 0.5, 0.5, 1.0))
     glLightfv(GL_LIGHT0, GL_DIFFUSE, (0.5, 0.5, 0.5, 1.0))
@@ -129,29 +153,26 @@ def Init():
     objetos.append(OBJ("Objetos/Semaforo4.obj"))
     objetos[2].generate()
 
-def draw_building(x, y, z, width, height, depth):
-    glColor3f(0.8, 0.8, 0.8)
-    glBegin(GL_QUADS)
-    glVertex3f(x - width / 2, y, z - depth / 2)
-    glVertex3f(x - width / 2, y + height, z - depth / 2)
-    glVertex3f(x + width / 2, y + height, z - depth / 2)
-    glVertex3f(x + width / 2, y, z - depth / 2)
-
-    glVertex3f(x - width / 2, y, z + depth / 2)
-    glVertex3f(x - width / 2, y + height, z + depth / 2)
-    glVertex3f(x + width / 2, y + height, z + depth / 2)
-    glVertex3f(x + width / 2, y, z + depth / 2)
-
-    glVertex3f(x - width / 2, y, z - depth / 2)
-    glVertex3f(x - width / 2, y + height, z - depth / 2)
-    glVertex3f(x - width / 2, y + height, z + depth / 2)
-    glVertex3f(x - width / 2, y, z + depth / 2)
-
-    glVertex3f(x + width / 2, y, z - depth / 2)
-    glVertex3f(x + width / 2, y + height, z - depth / 2)
-    glVertex3f(x + width / 2, y + height, z + depth / 2)
-    glVertex3f(x + width / 2, y, z + depth / 2)
+""" def draw_street(x1, z1, x2, z2, width):
+    glColor3f(0.5, 0.5, 0.5)
+    glLineWidth(width)
+    glBegin(GL_LINES)
+    glVertex3f(x1, 0.1, z1)
+    glVertex3f(x2, 0.1, z2)
     glEnd()
+    glLineWidth(1.0) """
+
+""" def draw_city():
+    for i in range(-DimBoard + 50, DimBoard - 50, 100):
+        for j in range(-DimBoard + 50, DimBoard - 50, 100):
+            building_height = 50 + abs(i % 150) + abs(j % 150)
+            draw_building(i, 0, j, 40, building_height, 40)
+
+            # Draw streets along x-axis
+            draw_street(i - 50, j, i + 50, j, 5)
+
+            # Draw streets along z-axis
+            draw_street(i, j - 50, i, j + 50, 5) """
 
 def displayobj():
     glPushMatrix()  
@@ -431,53 +452,124 @@ def displayobj():
     glPopMatrix()
     
     glPushMatrix()  
-    glRotatef(0.0, 0.0, 1.0, 0.0)
-    glTranslatef(-190.0, 0.0, -40.0)
+    glRotatef(-180.0, 0.0, 1.0, 0.0)
+    glTranslatef(190.0, 0.0, 26.0)
+    glScale(10.0, 10.0, 10.0)
+    objetos[2].render()  
+    glPopMatrix()
+    
+    glPushMatrix()  
+    glRotatef(-180.0, 0.0, 1.0, 0.0)
+    glTranslatef(-150.0, 0.0, 26.0)
     glScale(10.0, 10.0, 10.0)
     objetos[2].render()  
     glPopMatrix()
     
     glPushMatrix()  
     glRotatef(0.0, 0.0, 1.0, 0.0)
-    glTranslatef(155.0, 0.0, -40.0)
+    glTranslatef(-150.0, 0.0, -40.0)
     glScale(10.0, 10.0, 10.0)
     objetos[2].render()  
     glPopMatrix()
     
+    glPushMatrix()  
+    glRotatef(0.0, 0.0, 1.0, 0.0)
+    glTranslatef(195.0, 0.0, -40.0)
+    glScale(10.0, 10.0, 10.0)
+    objetos[2].render()  
+    glPopMatrix()
+    
+    glPushMatrix()  
+    glRotatef(0.0, 0.0, 1.0, 0.0)
+    glTranslatef(-20.0, 0.0, -40.0)
+    glScale(10.0, 10.0, 10.0)
+    objetos[2].render()  
+    glPopMatrix()
+    
+    
     #edificio 1
-    draw_building(50.0, 0.0, 55.0, 30, 105, 30)
-    draw_building(50.0, 0.0, 60.0, 30, 80, 30)
-    draw_building(50.0, 0.0, 70.0, 30, 70, 30)
+    '''
+    draw_building(70.0, 0.0, 55.0, 30, 105, 30)
+    draw_building(70.0, 0.0, 60.0, 30, 80, 30)
+    draw_building(70.0, 0.0, 70.0, 30, 70, 30)
     #edificio 2
-    draw_building(-75.0, 0.0, -55.0, 30, 105, 30)
-    draw_building(-75.0, 0.0, -60.0, 30, 80, 30)
-    draw_building(-75.0, 0.0, -70.0, 30, 70, 30)
+    draw_building(-95.0, 0.0, -55.0, 30, 105, 30)
+    draw_building(-95.0, 0.0, -60.0, 30, 80, 30)
+    draw_building(-95.0, 0.0, -70.0, 30, 70, 30)
+    
+    #edificio 2
+    draw_building(-105.0, 0.0, 105.0, 30, 105, 30)
+    draw_building(-105.0, 0.0, 110.0, 30, 80, 30)
+    draw_building(-105.0, 0.0, 120.0, 30, 70, 30)
+    
     
     #set de edificios 1
-    draw_building(50.0, 0.0, -40.0, 30, 105, 20)
-    draw_building(70.0, 0.0, -40.0, 30, 80, 20)
-    draw_building(90.0, 0.0, -40.0, 30, 70, 20)
+    draw_building(70.0, 0.0, -40.0, 30, 105, 20)
+    draw_building(90.0, 0.0, -40.0, 30, 80, 20)
+    draw_building(110.0, 0.0, -40.0, 30, 70, 20)
     
     #set de edificios 2
-    draw_building(-70.0, 0.0, 40.0, 30, 105, 20)
-    draw_building(-90.0, 0.0, 40.0, 30, 80, 20)
-    draw_building(-110.0, 0.0, 40.0, 30, 70, 20)
+    draw_building(-90.0, 0.0, 40.0, 30, 105, 20)
+    draw_building(-110.0, 0.0, 40.0, 30, 80, 20)
+    draw_building(-130.0, 0.0, 40.0, 30, 70, 20)
+    
+    #set de edificios 3
+    draw_building(20.0, 0.0, 60.0, 30, 105, 20)
+    draw_building(20.0, 0.0, -60.0, 30, 80, 20)
+    draw_building(20.0, 0.0, -90.0, 30, 80, 20)
+    draw_building(20.0, 0.0, -120.0, 30, 80, 20)
+    draw_building(20.0, 0.0, 40.0, 30, 70, 20)
+    
+    #set de edificios 4
+    draw_building(120.0, 0.0, -90.0, 30, 105, 20)
+    draw_building(120.0, 0.0, -90.0, 30, 80, 20)
+    draw_building(120.0, 0.0, -90.0, 30, 70, 20)
+    
+    #set de edificios 5
+    draw_building(110.0, 0.0, 110.0, 30, 105, 20)
+    draw_building(110.0, 0.0, 130.0, 30, 80, 20)
+    draw_building(110.0, 0.0, 150.0, 30, 70, 20)
+    
     
     #draw_building(60.0, 0.0, 26.0, 20, 85, 30)
     #draw_building(-190.0, 0.0, -40.0, 20, 100, 30)
     #draw_building(155.0, 0.0, -40.0, 30, 70, 30)
+'''
+
+
+def PlanoTexturizado():
+    #Activate textures
+    glColor3f(1.0,1.0,1.0)
+    glEnable(GL_TEXTURE_2D)
+    #front face
+    glBindTexture(GL_TEXTURE_2D, textures[0])    
+    glBegin(GL_QUADS)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3d(-DimBoard, 0, -DimBoard)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3d(-DimBoard, 0, DimBoard)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3d(DimBoard, 0, DimBoard)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3d(DimBoard, 0, -DimBoard)
+    glEnd()              
+    glDisable(GL_TEXTURE_2D)
+
 
 def display():  
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     Axis()
-    #Se dibuja el plano gris
+    PlanoTexturizado()
+    displayobj()
+    #draw_city()
+'''    #Se dibuja el plano gris
     glColor3f(0.3, 0.3, 0.3)
     glBegin(GL_QUADS)
     glVertex3d(-DimBoard, 0, -DimBoard)
     glVertex3d(-DimBoard, 0, DimBoard)
     glVertex3d(DimBoard, 0, DimBoard)
     glVertex3d(DimBoard, 0, -DimBoard)
-    glEnd()
+    glEnd()'''
 
 def handle_keys():
     global CENTER_X, CENTER_Y, CENTER_Z, EYE_Y, theta
