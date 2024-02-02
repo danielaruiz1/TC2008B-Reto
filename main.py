@@ -148,11 +148,11 @@ def Init():
     glEnable(GL_COLOR_MATERIAL)
     glShadeModel(GL_SMOOTH)           # most obj files expect to be smooth-shaded      
     
-    objetos.append(OBJ("TC2008B-Reto/Objetos/SuperRoad.obj", swapyz=True))
+    objetos.append(OBJ("Objetos/SuperRoad.obj", swapyz=True))
     objetos[0].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
     objetos[1].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Semaforo4.obj"))
+    objetos.append(OBJ("Objetos/Semaforo4.obj"))
     objetos[2].generate()
 
 def draw_building(x, y, z, width, height, depth):
