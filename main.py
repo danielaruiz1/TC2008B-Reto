@@ -58,7 +58,7 @@ Z_MAX=500
 DimBoard = 200
 #Variables para el control del observador
 theta = 0.0
-radius = 100
+radius = 200
 
 #Arreglo para objetos
 objetos = []
@@ -69,7 +69,7 @@ posiciones_entradas = np.array([[-220, -8],[220, 8],[-35, -220], [-48, 220], [-1
 #Arreglo para el manejo de texturas
 textures = []
 filename1 = "Texturas/textura0.jpeg"
-filename2 = "Texturas/textura1.jpeg"
+filename2 = "Texturas/textura3.jpg"
 
 pygame.init()
 
@@ -178,27 +178,6 @@ def draw_building(x, y, z, width, height, depth):
     glVertex3f(x + width / 2, y + height, z + depth / 2)
     glVertex3f(x + width / 2, y, z + depth / 2)
     glEnd()
-
-""" def draw_street(x1, z1, x2, z2, width):
-    glColor3f(0.5, 0.5, 0.5)
-    glLineWidth(width)
-    glBegin(GL_LINES)
-    glVertex3f(x1, 0.1, z1)
-    glVertex3f(x2, 0.1, z2)
-    glEnd()
-    glLineWidth(1.0) """
-
-""" def draw_city():
-    for i in range(-DimBoard + 50, DimBoard - 50, 100):
-        for j in range(-DimBoard + 50, DimBoard - 50, 100):
-            building_height = 50 + abs(i % 150) + abs(j % 150)
-            draw_building(i, 0, j, 40, building_height, 40)
-
-            # Draw streets along x-axis
-            draw_street(i - 50, j, i + 50, j, 5)
-
-            # Draw streets along z-axis
-            draw_street(i, j - 50, i, j + 50, 5) """
 
 def displayobj():
     glPushMatrix()  
@@ -569,7 +548,6 @@ def displayobj():
     #draw_building(-190.0, 0.0, -40.0, 20, 100, 30)
     #draw_building(155.0, 0.0, -40.0, 30, 70, 30)
 
-
 def PlanoTexturizado():
     #Activate textures
     glColor3f(1.0,1.0,1.0)
@@ -594,13 +572,13 @@ def Paredes():
     glEnable(GL_TEXTURE_2D)
     glBindTexture(GL_TEXTURE_2D, textures[1])
     glBegin(GL_QUADS)
-    glTexCoord2f(0.0, 0.0)
+    glTexCoord2f(0.0, 1.0)  
     glVertex3f(-DimBoard - 100, 0, DimBoard + 100)
-    glTexCoord2f(0.0, 1.0)
+    glTexCoord2f(0.0, 0.0)  
     glVertex3f(-DimBoard - 100, DimBoard , DimBoard + 100)
-    glTexCoord2f(1.0, 1.0)
+    glTexCoord2f(1.0, 0.0)  
     glVertex3f(DimBoard + 100, DimBoard , DimBoard + 100)
-    glTexCoord2f(1.0, 0.0)
+    glTexCoord2f(1.0, 1.0)  
     glVertex3f(DimBoard + 100, 0, DimBoard + 100)
     glEnd()
     glDisable(GL_TEXTURE_2D)
@@ -609,13 +587,13 @@ def Paredes():
     glEnable(GL_TEXTURE_2D)
     glBindTexture(GL_TEXTURE_2D, textures[1])
     glBegin(GL_QUADS)
-    glTexCoord2f(0.0, 0.0)
+    glTexCoord2f(0.0, 1.0) 
     glVertex3f(-DimBoard - 100, 0, -DimBoard - 100)
-    glTexCoord2f(0.0, 1.0)
+    glTexCoord2f(0.0, 0.0) 
     glVertex3f(-DimBoard - 100, DimBoard, -DimBoard - 100)
-    glTexCoord2f(1.0, 1.0)
+    glTexCoord2f(1.0, 0.0) 
     glVertex3f(DimBoard + 100, DimBoard, -DimBoard - 100)
-    glTexCoord2f(1.0, 0.0)
+    glTexCoord2f(1.0, 1.0) 
     glVertex3f(DimBoard + 100, 0, -DimBoard - 100)
     glEnd()
     glDisable(GL_TEXTURE_2D)
@@ -624,13 +602,13 @@ def Paredes():
     glEnable(GL_TEXTURE_2D)
     glBindTexture(GL_TEXTURE_2D, textures[1])
     glBegin(GL_QUADS)
-    glTexCoord2f(0.0, 0.0)
+    glTexCoord2f(0.0, 1.0) 
     glVertex3f(-DimBoard - 100, 0, -DimBoard - 100)
-    glTexCoord2f(0.0, 1.0)
+    glTexCoord2f(0.0, 0.0)
     glVertex3f(-DimBoard - 100, DimBoard, -DimBoard - 100)
-    glTexCoord2f(1.0, 1.0)
-    glVertex3f(-DimBoard - 100, DimBoard, DimBoard + 100)
     glTexCoord2f(1.0, 0.0)
+    glVertex3f(-DimBoard - 100, DimBoard, DimBoard + 100)
+    glTexCoord2f(1.0, 1.0) 
     glVertex3f(-DimBoard - 100, 0, DimBoard + 100)
     glEnd()
     glDisable(GL_TEXTURE_2D)
@@ -639,13 +617,13 @@ def Paredes():
     glEnable(GL_TEXTURE_2D)
     glBindTexture(GL_TEXTURE_2D, textures[1])
     glBegin(GL_QUADS)
-    glTexCoord2f(0.0, 0.0)
+    glTexCoord2f(0.0, 1.0) 
     glVertex3f(DimBoard + 100, 0, -DimBoard - 100)
-    glTexCoord2f(0.0, 1.0)
+    glTexCoord2f(0.0, 0.0)
     glVertex3f(DimBoard + 100, DimBoard, -DimBoard - 100)
-    glTexCoord2f(1.0, 1.0)
-    glVertex3f(DimBoard + 100, DimBoard, DimBoard + 100)
     glTexCoord2f(1.0, 0.0)
+    glVertex3f(DimBoard + 100, DimBoard, DimBoard + 100)
+    glTexCoord2f(1.0, 1.0)
     glVertex3f(DimBoard + 100, 0, DimBoard + 100)
     glEnd()
     glDisable(GL_TEXTURE_2D)
