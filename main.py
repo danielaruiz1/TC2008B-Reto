@@ -57,7 +57,8 @@ radius = DimBoard + 20
 objetos = []
 #Arreglo para el manejo de texturas
 textures = []
-filename1 = "TC2008B/textura0.jpeg"
+filename1 = "TC2008B-Reto/Texturas/textura0.jpeg"
+filename2 = "TC2008B-Reto/Texturas/textura3.jpg"
 
 pygame.init()
 
@@ -126,6 +127,7 @@ def Init():
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
     Texturas(filename1)
+    Texturas(filename2)
     
     glLightfv(GL_LIGHT0, GL_POSITION,  (0, 200, 0, 0.0))
     glLightfv(GL_LIGHT0, GL_AMBIENT, (0.5, 0.5, 0.5, 1.0))
@@ -133,22 +135,14 @@ def Init():
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
     glEnable(GL_COLOR_MATERIAL)
-<<<<<<< HEAD
     glShadeModel(GL_SMOOTH)           # most obj files expect to be smooth-shaded      
     
     objetos.append(OBJ("TC2008B-Reto/Objetos/SuperRoad.obj", swapyz=True))
-=======
-    glShadeModel(GL_SMOOTH)           # most obj files expect to be smooth-shaded        
-    objetos.append(OBJ("Objetos/SuperRoad.obj", swapyz=True))
->>>>>>> 446bcf10fb43e6f71d64dab882bbe82654ac92c2
     objetos[0].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
     objetos[1].generate()
-<<<<<<< HEAD
-=======
-    objetos.append(OBJ("Objetos/Semaforo4.obj"))
+    objetos.append(OBJ("TC2008B-Reto/Objetos/Semaforo4.obj"))
     objetos[2].generate()
->>>>>>> 446bcf10fb43e6f71d64dab882bbe82654ac92c2
 
 def draw_building(x, y, z, width, height, depth):
     glColor3f(0.8, 0.8, 0.8)
@@ -556,7 +550,6 @@ def displayobj():
     #draw_building(155.0, 0.0, -40.0, 30, 70, 30)
 
 
-
 def PlanoTexturizado():
     #Activate textures
     glColor3f(1.0,1.0,1.0)
@@ -575,11 +568,73 @@ def PlanoTexturizado():
     glEnd()              
     glDisable(GL_TEXTURE_2D)
 
+def Paredes():
+    # Pared frontal
+    glColor3f(1.0, 1.0, 1.0)  
+    glEnable(GL_TEXTURE_2D)
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_QUADS)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-DimBoard, 0, DimBoard)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-DimBoard, DimBoard * 0.5, DimBoard)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(DimBoard, DimBoard * 0.5, DimBoard)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(DimBoard, 0, DimBoard)
+    glEnd()
+    glDisable(GL_TEXTURE_2D)
+
+    # Pared trasera
+    glEnable(GL_TEXTURE_2D)
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_QUADS)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-DimBoard, 0, -DimBoard)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-DimBoard, DimBoard * 0.5, -DimBoard)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(DimBoard, DimBoard * 0.5, -DimBoard)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(DimBoard, 0, -DimBoard)
+    glEnd()
+    glDisable(GL_TEXTURE_2D)
+
+    # Pared izquierda
+    glEnable(GL_TEXTURE_2D)
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_QUADS)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-DimBoard, 0, -DimBoard)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-DimBoard, DimBoard * 0.5, -DimBoard)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(-DimBoard, DimBoard * 0.5, DimBoard)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(-DimBoard, 0, DimBoard)
+    glEnd()
+    glDisable(GL_TEXTURE_2D)
+
+    # Pared derecha
+    glEnable(GL_TEXTURE_2D)
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_QUADS)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(DimBoard, 0, -DimBoard)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(DimBoard, DimBoard * 0.5, -DimBoard)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(DimBoard, DimBoard * 0.5, DimBoard)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(DimBoard, 0, DimBoard)
+    glEnd()
+    glDisable(GL_TEXTURE_2D)
 
 def display():  
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     Axis()
     PlanoTexturizado()
+    Paredes()
     displayobj()
     #draw_city()
 '''    #Se dibuja el plano gris
