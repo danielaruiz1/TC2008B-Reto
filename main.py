@@ -145,7 +145,7 @@ def Init():
     objetos[2].generate()
 
 def draw_building(x, y, z, width, height, depth):
-    glColor3f(0.8, 0.8, 0.8)
+    #glColor3f(0.8, 0.8, 0.8)
     glBegin(GL_QUADS)
     glVertex3f(x - width / 2, y, z - depth / 2)
     glVertex3f(x - width / 2, y + height, z - depth / 2)
@@ -503,31 +503,38 @@ def displayobj():
     
     
     #edificio 1
+    glColor3f(10.3, 0.3, 0.3)
     draw_building(70.0, 0.0, 55.0, 30, 105, 30)
     draw_building(70.0, 0.0, 60.0, 30, 80, 30)
     draw_building(70.0, 0.0, 70.0, 30, 70, 30)
+    
     #edificio 2
+    glColor3f(1.5, 1.5, 0.5)
     draw_building(-95.0, 0.0, -55.0, 30, 105, 30)
     draw_building(-95.0, 0.0, -60.0, 30, 80, 30)
     draw_building(-95.0, 0.0, -70.0, 30, 70, 30)
     
     #edificio 2
+    glColor3f(1.5, 1.5, 0.5)
     draw_building(-105.0, 0.0, 105.0, 30, 105, 30)
     draw_building(-105.0, 0.0, 110.0, 30, 80, 30)
     draw_building(-105.0, 0.0, 120.0, 30, 70, 30)
     
     
     #set de edificios 1
+    glColor3f(0.0, 1.0, 1.0 )
     draw_building(70.0, 0.0, -40.0, 30, 105, 20)
     draw_building(90.0, 0.0, -40.0, 30, 80, 20)
     draw_building(110.0, 0.0, -40.0, 30, 70, 20)
     
-    #set de edificios 2
+    #set de edificios 
+    glColor3f(0.0, 1.0, 1.0 )
     draw_building(-90.0, 0.0, 40.0, 30, 105, 20)
     draw_building(-110.0, 0.0, 40.0, 30, 80, 20)
     draw_building(-130.0, 0.0, 40.0, 30, 70, 20)
     
     #set de edificios 3
+    glColor3f(1.5, 1.0, 0.5)
     draw_building(20.0, 0.0, 60.0, 30, 105, 20)
     draw_building(20.0, 0.0, -60.0, 30, 80, 20)
     draw_building(20.0, 0.0, -90.0, 30, 80, 20)
@@ -535,11 +542,13 @@ def displayobj():
     draw_building(20.0, 0.0, 40.0, 30, 70, 20)
     
     #set de edificios 4
+    glColor3f(10.3, 0.3, 0.3)
     draw_building(120.0, 0.0, -90.0, 30, 105, 20)
     draw_building(120.0, 0.0, -90.0, 30, 80, 20)
     draw_building(120.0, 0.0, -90.0, 30, 70, 20)
     
     #set de edificios 5
+    glColor3f(10.3, 0.3, 0.3)
     draw_building(110.0, 0.0, 110.0, 30, 105, 20)
     draw_building(110.0, 0.0, 130.0, 30, 80, 20)
     draw_building(110.0, 0.0, 150.0, 30, 70, 20)
