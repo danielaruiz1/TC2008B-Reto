@@ -608,13 +608,18 @@ class CarAgent(ap.Agent):
         self.carro = None
         self.msg = None
         self.moving = True
+
+        self.rect = pygame.Rect(0, 0, 10, 5)
     
         pass
 
     def step(self):
        # Dibujo del carro
-       self.carro.draw()
-       pass
+        self.carro.draw()
+
+        self.rect.x = self.carro.Position[0]
+        self.rect.y = self.carro.Position[1]
+        pass
 
     def update(self):
        pass
@@ -666,13 +671,10 @@ class Ciudad(ap.Model):
         # Se generan los agentes junto con su instancia de carro
         self.carros = ap.AgentList(self, self.p.carros, CarAgent)
         for i, agente in enumerate(self.carros):
-            agente.carro = Carro(1)
             # Asegúrate de que haya suficientes posiciones en la lista
             if i < len(posiciones_entradas):
                 x, y = posiciones_entradas[i]
-                # Asigna la posición al carro
-                agente.carro.Position[0] = x
-                agente.carro.Position[1] = y
+                agente.carro = Carro(1, self.carros, x, y)
 
                 if y > 200:
                     # Aplicar rotación de 180 grados
