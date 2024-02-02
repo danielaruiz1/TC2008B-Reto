@@ -1,4 +1,4 @@
-#
+# 
 import pygame
 from pygame.locals import *
 
@@ -38,9 +38,9 @@ ZNEAR=1.0
 ZFAR=900.0
 #Variables para definir la posicion del observador
 #gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z)
-EYE_X=60.0
-EYE_Y=40.0
-EYE_Z=60.0
+EYE_X=300.0
+EYE_Y=100.0
+EYE_Z=300.0
 CENTER_X=0
 CENTER_Y=0
 CENTER_Z=0
@@ -60,6 +60,7 @@ DimBoard = 200
 theta = 0.0
 radius = 100
 
+#Arreglo para objetos
 objetos = []
 
 ontologia_file_path = "pFinal_onto.owl"
@@ -145,13 +146,38 @@ def Init():
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
     glEnable(GL_COLOR_MATERIAL)
-    glShadeModel(GL_SMOOTH)           # most obj files expect to be smooth-shaded        
-    objetos.append(OBJ("Objetos/SuperRoad.obj", swapyz=True))
+    glShadeModel(GL_SMOOTH)           # most obj files expect to be smooth-shaded      
+    
+    objetos.append(OBJ("TC2008B-Reto/Objetos/SuperRoad.obj", swapyz=True))
     objetos[0].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
     objetos[1].generate()
-    objetos.append(OBJ("Objetos/Semaforo4.obj"))
+    objetos.append(OBJ("TC2008B-Reto/Objetos/Semaforo4.obj"))
     objetos[2].generate()
+
+def draw_building(x, y, z, width, height, depth):
+    #glColor3f(0.8, 0.8, 0.8)
+    glBegin(GL_QUADS)
+    glVertex3f(x - width / 2, y, z - depth / 2)
+    glVertex3f(x - width / 2, y + height, z - depth / 2)
+    glVertex3f(x + width / 2, y + height, z - depth / 2)
+    glVertex3f(x + width / 2, y, z - depth / 2)
+
+    glVertex3f(x - width / 2, y, z + depth / 2)
+    glVertex3f(x - width / 2, y + height, z + depth / 2)
+    glVertex3f(x + width / 2, y + height, z + depth / 2)
+    glVertex3f(x + width / 2, y, z + depth / 2)
+
+    glVertex3f(x - width / 2, y, z - depth / 2)
+    glVertex3f(x - width / 2, y + height, z - depth / 2)
+    glVertex3f(x - width / 2, y + height, z + depth / 2)
+    glVertex3f(x - width / 2, y, z + depth / 2)
+
+    glVertex3f(x + width / 2, y, z - depth / 2)
+    glVertex3f(x + width / 2, y + height, z - depth / 2)
+    glVertex3f(x + width / 2, y + height, z + depth / 2)
+    glVertex3f(x + width / 2, y, z + depth / 2)
+    glEnd()
 
 """ def draw_street(x1, z1, x2, z2, width):
     glColor3f(0.5, 0.5, 0.5)
@@ -488,32 +514,38 @@ def displayobj():
     
     
     #edificio 1
-    '''
+    glColor3f(10.3, 0.3, 0.3)
     draw_building(70.0, 0.0, 55.0, 30, 105, 30)
     draw_building(70.0, 0.0, 60.0, 30, 80, 30)
     draw_building(70.0, 0.0, 70.0, 30, 70, 30)
+    
     #edificio 2
+    glColor3f(1.5, 1.5, 0.5)
     draw_building(-95.0, 0.0, -55.0, 30, 105, 30)
     draw_building(-95.0, 0.0, -60.0, 30, 80, 30)
     draw_building(-95.0, 0.0, -70.0, 30, 70, 30)
     
     #edificio 2
+    glColor3f(1.5, 1.5, 0.5)
     draw_building(-105.0, 0.0, 105.0, 30, 105, 30)
     draw_building(-105.0, 0.0, 110.0, 30, 80, 30)
     draw_building(-105.0, 0.0, 120.0, 30, 70, 30)
     
     
     #set de edificios 1
+    glColor3f(0.0, 1.0, 1.0 )
     draw_building(70.0, 0.0, -40.0, 30, 105, 20)
     draw_building(90.0, 0.0, -40.0, 30, 80, 20)
     draw_building(110.0, 0.0, -40.0, 30, 70, 20)
     
-    #set de edificios 2
+    #set de edificios 
+    glColor3f(0.0, 1.0, 1.0 )
     draw_building(-90.0, 0.0, 40.0, 30, 105, 20)
     draw_building(-110.0, 0.0, 40.0, 30, 80, 20)
     draw_building(-130.0, 0.0, 40.0, 30, 70, 20)
     
     #set de edificios 3
+    glColor3f(1.5, 1.0, 0.5)
     draw_building(20.0, 0.0, 60.0, 30, 105, 20)
     draw_building(20.0, 0.0, -60.0, 30, 80, 20)
     draw_building(20.0, 0.0, -90.0, 30, 80, 20)
@@ -521,11 +553,13 @@ def displayobj():
     draw_building(20.0, 0.0, 40.0, 30, 70, 20)
     
     #set de edificios 4
+    glColor3f(10.3, 0.3, 0.3)
     draw_building(120.0, 0.0, -90.0, 30, 105, 20)
     draw_building(120.0, 0.0, -90.0, 30, 80, 20)
     draw_building(120.0, 0.0, -90.0, 30, 70, 20)
     
     #set de edificios 5
+    glColor3f(10.3, 0.3, 0.3)
     draw_building(110.0, 0.0, 110.0, 30, 105, 20)
     draw_building(110.0, 0.0, 130.0, 30, 80, 20)
     draw_building(110.0, 0.0, 150.0, 30, 70, 20)
@@ -534,7 +568,6 @@ def displayobj():
     #draw_building(60.0, 0.0, 26.0, 20, 85, 30)
     #draw_building(-190.0, 0.0, -40.0, 20, 100, 30)
     #draw_building(155.0, 0.0, -40.0, 30, 70, 30)
-'''
 
 
 def PlanoTexturizado():
@@ -555,11 +588,91 @@ def PlanoTexturizado():
     glEnd()              
     glDisable(GL_TEXTURE_2D)
 
+def Paredes():
+    # Pared frontal
+    glColor3f(1.0, 1.0, 1.0)  
+    glEnable(GL_TEXTURE_2D)
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_QUADS)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-DimBoard - 100, 0, DimBoard + 100)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-DimBoard - 100, DimBoard , DimBoard + 100)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(DimBoard + 100, DimBoard , DimBoard + 100)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(DimBoard + 100, 0, DimBoard + 100)
+    glEnd()
+    glDisable(GL_TEXTURE_2D)
+
+    # Pared trasera
+    glEnable(GL_TEXTURE_2D)
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_QUADS)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-DimBoard - 100, 0, -DimBoard - 100)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-DimBoard - 100, DimBoard, -DimBoard - 100)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(DimBoard + 100, DimBoard, -DimBoard - 100)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(DimBoard + 100, 0, -DimBoard - 100)
+    glEnd()
+    glDisable(GL_TEXTURE_2D)
+
+    # Pared izquierda
+    glEnable(GL_TEXTURE_2D)
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_QUADS)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(-DimBoard - 100, 0, -DimBoard - 100)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(-DimBoard - 100, DimBoard, -DimBoard - 100)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(-DimBoard - 100, DimBoard, DimBoard + 100)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(-DimBoard - 100, 0, DimBoard + 100)
+    glEnd()
+    glDisable(GL_TEXTURE_2D)
+
+    # Pared derecha
+    glEnable(GL_TEXTURE_2D)
+    glBindTexture(GL_TEXTURE_2D, textures[1])
+    glBegin(GL_QUADS)
+    glTexCoord2f(0.0, 0.0)
+    glVertex3f(DimBoard + 100, 0, -DimBoard - 100)
+    glTexCoord2f(0.0, 1.0)
+    glVertex3f(DimBoard + 100, DimBoard, -DimBoard - 100)
+    glTexCoord2f(1.0, 1.0)
+    glVertex3f(DimBoard + 100, DimBoard, DimBoard + 100)
+    glTexCoord2f(1.0, 0.0)
+    glVertex3f(DimBoard + 100, 0, DimBoard + 100)
+    glEnd()
+    glDisable(GL_TEXTURE_2D)
+
 
 def display():  
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     Axis()
     PlanoTexturizado()
+    Paredes()
+    # Pared superior (cielo)
+    glColor3f(0.53, 0.81, 0.92)  # Azul claro
+    glBegin(GL_QUADS)
+    glVertex3d(-DimBoard - 100, DimBoard, -DimBoard - 100)
+    glVertex3d(DimBoard + 100, DimBoard, -DimBoard - 100)
+    glVertex3d(DimBoard + 100, DimBoard, DimBoard + 100)
+    glVertex3d(-DimBoard - 100, DimBoard, DimBoard + 100)
+    glEnd()
+    
+    # # Dibujar el piso verde
+    glColor3f(0.0, 0.8, 0.0)
+    glBegin(GL_QUADS)
+    glVertex3d(-DimBoard - 100, -1, -DimBoard - 100)
+    glVertex3d(-DimBoard - 100, -1, DimBoard + 100)
+    glVertex3d(DimBoard + 100, -1, DimBoard + 100)
+    glVertex3d(DimBoard + 100, -1, -DimBoard - 100)
+    glEnd()
     displayobj()
     #draw_city()
 '''    #Se dibuja el plano gris
