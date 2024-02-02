@@ -11,6 +11,7 @@ import random
 #import IPython
 import math
 
+
 # Cargamos las bibliotecas de OpenGL
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -19,7 +20,7 @@ from OpenGL.GLUT import *
 # Se carga el archivo de la clase Cubo
 import sys, math
 sys.path.append('..')
-#from Ciudad import Ciudad
+from Clases.Edificio import Edificio
 
 from objloader import *
 
@@ -56,7 +57,8 @@ radius = DimBoard + 20
 objetos = []
 #Arreglo para el manejo de texturas
 textures = []
-filename1 = "TC2008B/textura0.jpeg"
+filename1 = "Texturas/textura0.jpeg"
+filename2 = "Texturas/textura1.jpeg"
 
 pygame.init()
 
@@ -125,6 +127,7 @@ def Init():
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
     Texturas(filename1)
+    Texturas(filename2)
     
     glLightfv(GL_LIGHT0, GL_POSITION,  (0, 200, 0, 0.0))
     glLightfv(GL_LIGHT0, GL_AMBIENT, (0.5, 0.5, 0.5, 1.0))
@@ -139,30 +142,6 @@ def Init():
     objetos[1].generate()
     objetos.append(OBJ("Objetos/Semaforo4.obj"))
     objetos[2].generate()
-
-def draw_building(x, y, z, width, height, depth):
-    glColor3f(0.8, 0.8, 0.8)
-    glBegin(GL_QUADS)
-    glVertex3f(x - width / 2, y, z - depth / 2)
-    glVertex3f(x - width / 2, y + height, z - depth / 2)
-    glVertex3f(x + width / 2, y + height, z - depth / 2)
-    glVertex3f(x + width / 2, y, z - depth / 2)
-
-    glVertex3f(x - width / 2, y, z + depth / 2)
-    glVertex3f(x - width / 2, y + height, z + depth / 2)
-    glVertex3f(x + width / 2, y + height, z + depth / 2)
-    glVertex3f(x + width / 2, y, z + depth / 2)
-
-    glVertex3f(x - width / 2, y, z - depth / 2)
-    glVertex3f(x - width / 2, y + height, z - depth / 2)
-    glVertex3f(x - width / 2, y + height, z + depth / 2)
-    glVertex3f(x - width / 2, y, z + depth / 2)
-
-    glVertex3f(x + width / 2, y, z - depth / 2)
-    glVertex3f(x + width / 2, y + height, z - depth / 2)
-    glVertex3f(x + width / 2, y + height, z + depth / 2)
-    glVertex3f(x + width / 2, y, z + depth / 2)
-    glEnd()
 
 """ def draw_street(x1, z1, x2, z2, width):
     glColor3f(0.5, 0.5, 0.5)
@@ -499,6 +478,7 @@ def displayobj():
     
     
     #edificio 1
+    '''
     draw_building(70.0, 0.0, 55.0, 30, 105, 30)
     draw_building(70.0, 0.0, 60.0, 30, 80, 30)
     draw_building(70.0, 0.0, 70.0, 30, 70, 30)
@@ -544,7 +524,7 @@ def displayobj():
     #draw_building(60.0, 0.0, 26.0, 20, 85, 30)
     #draw_building(-190.0, 0.0, -40.0, 20, 100, 30)
     #draw_building(155.0, 0.0, -40.0, 30, 70, 30)
-
+'''
 
 
 def PlanoTexturizado():
