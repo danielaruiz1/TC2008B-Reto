@@ -32,7 +32,7 @@ ZFAR=900.0
 #Variables para definir la posicion del observador
 #gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z)
 EYE_X=300.0
-EYE_Y=200.0
+EYE_Y=100.0
 EYE_Z=300.0
 CENTER_X=0
 CENTER_Y=0
@@ -51,12 +51,12 @@ Z_MAX=500
 DimBoard = 200
 #Variables para el control del observador
 theta = 0.0
-radius = DimBoard + 20
+radius = DimBoard + 10
 
 objetos = []
 #Arreglo para el manejo de texturas
 textures = []
-filename1 = "TC2008B/textura0.jpeg"
+filename1 = "TC2008B-Reto/Texturas/textura0.jpeg"
 
 pygame.init()
 
@@ -133,11 +133,11 @@ def Init():
     glEnable(GL_LIGHT0)
     glEnable(GL_COLOR_MATERIAL)
     glShadeModel(GL_SMOOTH)           # most obj files expect to be smooth-shaded        
-    objetos.append(OBJ("Objetos/SuperRoad.obj", swapyz=True))
+    objetos.append(OBJ("TC2008B-Reto/Objetos/SuperRoad.obj", swapyz=True))
     objetos[0].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
     objetos[1].generate()
-    objetos.append(OBJ("Objetos/Semaforo4.obj"))
+    objetos.append(OBJ("TC2008B-Reto/Objetos/Semaforo4.obj"))
     objetos[2].generate()
 
 def draw_building(x, y, z, width, height, depth):
@@ -570,6 +570,25 @@ def display():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     Axis()
     PlanoTexturizado()
+    
+    # Pared superior (cielo)
+    glColor3f(0.53, 0.81, 0.92)  # Azul claro
+    glBegin(GL_QUADS)
+    glVertex3d(-DimBoard - 100, DimBoard, -DimBoard - 100)
+    glVertex3d(DimBoard + 100, DimBoard, -DimBoard - 100)
+    glVertex3d(DimBoard + 100, DimBoard, DimBoard + 100)
+    glVertex3d(-DimBoard - 100, DimBoard, DimBoard + 100)
+    glEnd()
+    
+    # # Dibujar el piso verde
+    glColor3f(0.0, 0.8, 0.0)
+    glBegin(GL_QUADS)
+    glVertex3d(-DimBoard - 100, -1, -DimBoard - 100)
+    glVertex3d(-DimBoard - 100, -1, DimBoard + 100)
+    glVertex3d(DimBoard + 100, -1, DimBoard + 100)
+    glVertex3d(DimBoard + 100, -1, -DimBoard - 100)
+    glEnd()
+    
     displayobj()
     #draw_city()
 '''    #Se dibuja el plano gris
