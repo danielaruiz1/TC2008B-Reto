@@ -25,8 +25,8 @@ from OpenGL.GLUT import *
 import sys, math
 sys.path.append('Clases')
 from Clases.Carro import Carro
-
 from Clases.Edificio import Edificio
+from Clases.Semaforo import Semaforo
 
 from objloader import *
 
@@ -38,9 +38,9 @@ ZNEAR=1.0
 ZFAR=900.0
 #Variables para definir la posicion del observador
 #gluLookAt(EYE_X,EYE_Y,EYE_Z,CENTER_X,CENTER_Y,CENTER_Z,UP_X,UP_Y,UP_Z)
-EYE_X=300.0
-EYE_Y=100.0
-EYE_Z=300.0
+EYE_X=200.0
+EYE_Y=180.0
+EYE_Z=200.0
 CENTER_X=0
 CENTER_Y=0
 CENTER_Z=0
@@ -65,7 +65,16 @@ objetos = []
 
 ontologia_file_path = "pFinal_onto.owl"
 
-posiciones_entradas = np.array([[-220, -8],[220, 8],[-35, -220], [-48, 220], [-180, 220],[-166, -220], [166, 220], [180, -220]])
+posiciones_entradas = np.array([[-220.0, -8.0],[220.0, 8.0],[-35.0, -220.0], [-48, 220.0], [-180.0, 220.0],[-166.0, -220.0], [166.0, 220.0], [180.0, -220.0]])
+posiciones_finales = np.array([[220.0, -8.0], [-220.0, 8.0], [-35.0, 220.0], [-48, -220.0], [-180.0, -220.0], [-166.0, 220.0], [166.0, -220.0], [180.0, 220.0]])
+
+posiciones_semaforos = np.array([[-25.0, -197.0, -90], [-25.0, 150.0, -90.0],[-25.0, -67.0, -90.0],
+                                 [-25.0, -197.0, 90.0], [-25.0, 150.0, 90.0], [-25.0, 17.0, 90.0],
+                                 [-67.0, -25.0, 0.0], [-197.0, -25.0, 0.0], [150.0, -25.0, 0.0],
+                                 [17.0, -25.0, 180.0], [150.0, -25.0, 180.0], [-197.0, -25.0, 180.0]])
+
+ 
+
 #Arreglo para el manejo de texturas
 textures = []
 filename1 = "Texturas/textura0.jpeg"
@@ -152,8 +161,6 @@ def Init():
     objetos[0].generate()
     objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
     objetos[1].generate()
-    objetos.append(OBJ("Objetos/Semaforo4.obj"))
-    objetos[2].generate()
 
 def draw_building(x, y, z, width, height, depth):
     #glColor3f(0.8, 0.8, 0.8)
@@ -425,72 +432,8 @@ def displayobj():
     glRotatef(-90.0, 1.0, 0.0, 0.0)
     glTranslatef(-173.0, -173.0, 3.0)
     glScale(6.0,6.0,6.0)
-    objetos[1].render()  
+    objetos[1].render()
     glPopMatrix()
-    
-    glPushMatrix()  
-    glRotatef(-90.0, 0.0, 1.0, 0.0)
-    glTranslatef(20.0, 0.0, 15.0)
-    glScale(10.0, 10.0, 10.0)
-    objetos[2].render()  
-    glPopMatrix()
-    
-    glPushMatrix()  
-    glRotatef(-90.0, 0.0, 1.0, 0.0)
-    glTranslatef(20.0, 0.0, -186.0)
-    glScale(10.0, 10.0, 10.0)
-    objetos[2].render()  
-    glPopMatrix()
-    
-    glPushMatrix()  
-    glRotatef(-90.0, 0.0, 1.0, 0.0)
-    glTranslatef(20.0, 0.0, 156.0)
-    glScale(10.0, 10.0, 10.0)
-    objetos[2].render()  
-    glPopMatrix()
-    
-    glPushMatrix()  
-    glRotatef(-180.0, 0.0, 1.0, 0.0)
-    glTranslatef(60.0, 0.0, 26.0)
-    glScale(10.0, 10.0, 10.0)
-    objetos[2].render()  
-    glPopMatrix()
-    
-    glPushMatrix()  
-    glRotatef(-180.0, 0.0, 1.0, 0.0)
-    glTranslatef(190.0, 0.0, 26.0)
-    glScale(10.0, 10.0, 10.0)
-    objetos[2].render()  
-    glPopMatrix()
-    
-    glPushMatrix()  
-    glRotatef(-180.0, 0.0, 1.0, 0.0)
-    glTranslatef(-150.0, 0.0, 26.0)
-    glScale(10.0, 10.0, 10.0)
-    objetos[2].render()  
-    glPopMatrix()
-    
-    glPushMatrix()  
-    glRotatef(0.0, 0.0, 1.0, 0.0)
-    glTranslatef(-150.0, 0.0, -40.0)
-    glScale(10.0, 10.0, 10.0)
-    objetos[2].render()  
-    glPopMatrix()
-    
-    glPushMatrix()  
-    glRotatef(0.0, 0.0, 1.0, 0.0)
-    glTranslatef(195.0, 0.0, -40.0)
-    glScale(10.0, 10.0, 10.0)
-    objetos[2].render()  
-    glPopMatrix()
-    
-    glPushMatrix()  
-    glRotatef(0.0, 0.0, 1.0, 0.0)
-    glTranslatef(-20.0, 0.0, -40.0)
-    glScale(10.0, 10.0, 10.0)
-    objetos[2].render()  
-    glPopMatrix()
-    
     
     #edificio 1
     glColor3f(10.3, 0.3, 0.3)
@@ -628,7 +571,6 @@ def Paredes():
     glEnd()
     glDisable(GL_TEXTURE_2D)
 
-
 def display():  
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     Axis()
@@ -652,15 +594,6 @@ def display():
     glVertex3d(DimBoard + 100, -1, -DimBoard - 100)
     glEnd()
     displayobj()
-    #draw_city()
-'''    #Se dibuja el plano gris
-    glColor3f(0.3, 0.3, 0.3)
-    glBegin(GL_QUADS)
-    glVertex3d(-DimBoard, 0, -DimBoard)
-    glVertex3d(-DimBoard, 0, DimBoard)
-    glVertex3d(DimBoard, 0, DimBoard)
-    glVertex3d(DimBoard, 0, -DimBoard)
-    glEnd()'''
 
 def handle_keys():
     global CENTER_X, CENTER_Y, CENTER_Z, EYE_Y, theta
@@ -712,7 +645,6 @@ with onto:
     class at_position(DataProperty,FunctionalProperty):
       domain = [Place]
       range = [str]
-      pass
 
     #Estado del semaforo (Colores)
     class traffic_light_state(DataProperty):
@@ -780,32 +712,64 @@ class CarAgent(ap.Agent):
        pass
 
     def initBeliefs(self, initPos):
-       pass
+        place = Place(at_position=str(initPos))
+
+        '''Enteoria no es necesario pues la instancia se corre
+           en la clase'''
+        self.this_car = Car(is_in_place = [place])
 
     def initIntentions(self):
-       pass
+       
+       self.intentionSucceded = True
+       self.I = None
 
     #======================Funciones Principales=======================
 
     def setup(self):
         self.carro = None
         self.msg = None
-        self.moving = True
-
-        self.rect = pygame.Rect(0, 0, 10, 5)
-    
-        pass
+        self.action = 0 # 0 = Del., 1 = Der., 2 = Izq., 3 = Atras
+        self.crossing = True
+        self.firstStep = True
+        self.hitbox = Hitbox3D(position=[0, 0, 0], size=[10, 10, 5])  # Ajusta el tamaño según tus necesidades
 
     def step(self):
        # Dibujo del carro
         self.carro.draw()
 
-        self.rect.x = self.carro.Position[0]
-        self.rect.y = self.carro.Position[1]
+        if self.firstStep:
+            initPos = self.carro.Position
+            self.initBeliefs(initPos)
+            self.initIntentions()
+            self.firstStep = False
+
+        self.BDI(self.see(self.model.carros))
+
+        new_position = np.array(self.carro.Position) + np.array(self.carro.Direction)
+
+
+        self.update()
+        self.execute()
+
         pass
 
     def update(self):
-       pass
+        new_x = self.carro.Position[0] + self.carro.Direction[0]
+        new_y = self.carro.Position[1] + self.carro.Direction[1]
+
+        new_hitbox = Hitbox3D(position=[new_x, new_y, 5], size=[10, 10, 5])
+        
+        for objeto in self.model.carros + self.model.semaforos:
+            if objeto != self:  # Excluir la instancia actual del agente
+                if hasattr(objeto, 'hitbox_light'):
+                    if new_hitbox.collides_with(objeto.hitbox_light):
+                        # Detener el carro de inmediato
+                        self.carro.Direction = [0, 0, 0]  # Detener cambiando la dirección
+                        break
+        else:
+            # No hubo colisión, actualiza la posición
+            self.carro.Position = [new_x, new_y, 5]
+
 
     def end(self):
        pass
@@ -817,32 +781,46 @@ class SemaforoAgent(ap.Agent):
             carro.check_traffic_light(mensaje)
         pass
 
+    def set_semaforo(self, semaforo):
+        self.semaforo = semaforo
+        if self.semaforo and not self.hitbox_light:  # Verificar que haya un semáforo y el Hitbox3D no se haya creado
+            print("semaforo:", self.semaforo, " x: ", semaforo.Position[0], " y: ", semaforo.Position[1])
+            if self.semaforo.Rotacion == 180:
+                self.hitbox_light = Hitbox3D(position=[semaforo.Position[0] * -1 - 10, semaforo.Position[1] + 5, 10], size=[10, 10, 10])
+            elif self.semaforo.Rotacion == 0:
+                self.hitbox_light = Hitbox3D(position=[semaforo.Position[0] + 10, semaforo.Position[1] * -1 - 5, 10], size=[10, 10, 10])
+            elif self.semaforo.Rotacion == 90:
+                self.hitbox_light = Hitbox3D(position=[semaforo.Position[1] * -1 - 43, semaforo.Position[2] * -1 - 3, 10], size=[10, 10, 10])
+            elif self.semaforo.Rotacion == -90:
+                self.hitbox_light = Hitbox3D(position=[semaforo.Position[1] + 45, semaforo.Position[0] * -1 - 10, 10], size=[10, 10, 10])
+
     def setup(self):
         self.semaforo = None
         self.estado = 0 # 0 = rojo, 1 = amarillo, 2 = verde
         self.tiempo_cambio = 0.0
         self.carros_suscritos = []
-        pass
+        self.hitbox_light = None  # Ajusta el tamaño según tus necesidades
 
     def step(self):
+        self.semaforo.draw()
     
-        if(self.tiempo_cambio == 30):
-            self.estado = 2
-        elif(self.tiempo_cambio == 60):
-            self.estado = 1
-        elif(self.tiempo_cambio == 70):
-            self.estado = 0
-            self.tiempo_cambio = 0
+        # if(self.tiempo_cambio == 30):
+        #     self.estado = 2
+        # elif(self.tiempo_cambio == 60):
+        #     self.estado = 1
+        # elif(self.tiempo_cambio == 70):
+        #     self.estado = 0
+        #     self.tiempo_cambio = 0
 
-        self.tiempo_cambio += 1.0
+        # self.tiempo_cambio += 1.0
 
-        mensaje = self.estado
-        self.notify(mensaje)
-       
+        # mensaje = self.estado
+        # self.notify(mensaje)
+        self.update()
         pass
 
     def update(self):
-       pass
+        pass
 
     def end(self):
        pass
@@ -852,7 +830,16 @@ class Ciudad(ap.Model):
         # Se inicializa todas las variables de control
         Init()
         # Se generan los agentes junto con su instancia de carro
-        self.carros = ap.AgentList(self, self.p.carros, CarAgent)
+        #self.carros = ap.AgentList(self, self.p.carros, CarAgent)
+        self.carros = ap.AgentList(self, 8, CarAgent)
+        self.semaforos = ap.AgentList(self, 12, SemaforoAgent)
+
+        for i, agente in enumerate(self.semaforos):
+            if i < len(posiciones_semaforos):
+                x, z, rot = posiciones_semaforos[i]
+                agente.semaforo = Semaforo(x, z, rot)
+                agente.set_semaforo(agente.semaforo)
+
         for i, agente in enumerate(self.carros):
             # Asegúrate de que haya suficientes posiciones en la lista
             if i < len(posiciones_entradas):
@@ -879,7 +866,6 @@ class Ciudad(ap.Model):
                     agente.carro.has_rotated = True
                     agente.carro.Direction[0] *= 1
                     agente.carro.Direction[1] *= 0
-
             else:
                 # O maneja la situación si hay menos posiciones de las esperadas
                 print("No hay suficientes posiciones predefinidas para todos los carros.")
@@ -889,9 +875,14 @@ class Ciudad(ap.Model):
         display()
         displayobj()
 
+        for semaforo in self.semaforos:
+           semaforo.step()
+
+
         for carro in self.carros:
            carro.step()
-        
+           carro.update()
+
         pygame.display.flip()
         pygame.time.wait(10)
 
@@ -907,6 +898,18 @@ class Ciudad(ap.Model):
     def end(self):
        pygame.quit()
        sys.exit()
+
+class Hitbox3D:
+    def __init__(self, position, size):
+        self.position = np.array(position)
+        self.size = np.array(size)
+
+    def collides_with(self, other_hitbox):
+        # Verifica si hay colisión entre dos hitboxes 3D
+        min_distance = (self.size + other_hitbox.size) / 2
+        distance = np.abs(self.position - other_hitbox.position)
+        return np.all(distance < min_distance)
+    
 
 parameters = {
    "steps": 5000,

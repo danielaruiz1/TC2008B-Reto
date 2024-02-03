@@ -33,12 +33,6 @@ class Carro:
         except Exception as e:
             print(f"Error al cargar el objeto: {e}")
 
-        # Definir el rectángulo
-        self.rect = pygame.Rect(self.Position[0], self.Position[1], 10.0, 5.0)
-
-    def rotate(self, angle):
-        glRotatef(angle, 0.0, 0.0, 1.0)
-
     def draw(self):
         glPushMatrix()
 
@@ -49,29 +43,14 @@ class Carro:
         self.objeto.render()
 
         glPopMatrix()
-        self.update()
+        #self.update()
 
     def update(self):
         new_x = self.Position[0] + self.Direction[0]
         new_y = self.Position[1] + self.Direction[1]
 
-        # Actualizar el rectángulo
-        self.rect.x = new_x
-        self.rect.y = new_y
-
-        # Verificar colisiones con otros objetos
-        for otro_objeto in self.listCarros:
-            if self.rect.colliderect(otro_objeto.rect):
-                if(otro_objeto.rect[0] != self.rect[0] and otro_objeto.rect[1] != self.rect[1]):
-                    self.Direction = [0, 0, 0]
-                    print("colision")
-                    print(f"Rectángulo actual: {self.rect}")
-                    print(f"Rectángulo del otro objeto: {otro_objeto.rect}")
-                    break  # Termina el bucle si hay una colisión
-        else:
-            # No hay colisión, actualiza la posición
-            self.Position[0] = new_x
-            self.Position[1] = new_y
+        self.Position[0] = new_x
+        self.Position[1] = new_y
 
 
 
