@@ -43,14 +43,6 @@ class Carro:
         self.objeto.render()
 
         glPopMatrix()
-        #self.update()
-
-    def update(self):
-        new_x = self.Position[0] + self.Direction[0]
-        new_y = self.Position[1] + self.Direction[1]
-
-        self.Position[0] = new_x
-        self.Position[1] = new_y
 
 
 

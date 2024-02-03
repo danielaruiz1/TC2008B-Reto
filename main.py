@@ -654,6 +654,10 @@ with onto:
       domain = [Car]
       range = [float]
 
+    class has_direction_car(DataProperty):
+      domain = [Car]
+      range = [float]
+
     #Propiedad para describir los carros que tenga adelante
     class cars_within_reach(ObjectProperty):
       domain = [Traffic_light]
@@ -689,7 +693,32 @@ class CarAgent(ap.Agent):
         self.msg = msg
    
     def see(self, e):
-        pass
+        new_x = self.carro.Position[0] + self.carro.Direction[0]
+        new_y = self.carro.Position[1] + self.carro.Direction[1]
+
+        new_hitbox = Hitbox3D(position=[new_x, new_y, 5], size=[10, 10, 5])
+        
+        p = []
+
+        for objeto in e:
+            if objeto != self:  # Excluir la instancia actual del agente
+                if hasattr(objeto, 'semaforo'):
+                    if self.crossing != True:
+                        if new_hitbox.collides_with(objeto.hitbox_light):
+                            print("Colision enfrente")
+                            self.crossing = True
+                            p.append([objeto, "light"])
+                            p.append(objeto.carros_suscritos)
+                    else:
+                        if new_hitbox.collides_with(objeto.hitbox_side):
+                            print("Colision costado")
+                            self.crossing = False
+                            p.append([objeto, "side"])
+        else:
+            # No hubo colisión, actualiza la posición
+            self.carro.Position = [new_x, new_y, 5]
+
+        return p
     
     def brf(self, p):
        pass
@@ -704,17 +733,22 @@ class CarAgent(ap.Agent):
        pass
 
     def BDI(self, p):
-       pass
+       
+       print(p)
 
     def execute(self):
        pass
 
     def initBeliefs(self, initPos):
+
         place = Place(at_position=str(initPos))
 
-        '''Enteoria no es necesario pues la instancia se corre
-           en la clase'''
+        '''No tiene mucho sentido pues la instancia de carro
+           se puede ver en la variable self.carro'''
+        
         self.this_car = Car(is_in_place = [place])
+        self.this_car.has_direction_car = list(self.carro.Direction)
+        self.this_car.has_speed_car = [self.carro.vel]
 
     def initIntentions(self):
        
@@ -727,7 +761,7 @@ class CarAgent(ap.Agent):
         self.carro = None
         self.msg = None
         self.action = 0 # 0 = Del., 1 = Der., 2 = Izq., 3 = Atras
-        self.crossing = True
+        self.crossing = False
         self.firstStep = True
         self.hitbox = Hitbox3D(position=[0, 0, 0], size=[10, 10, 5])  # Ajusta el tamaño según tus necesidades
 
@@ -741,7 +775,7 @@ class CarAgent(ap.Agent):
             self.initIntentions()
             self.firstStep = False
 
-        self.BDI(self.see(self.model.carros))
+        self.BDI(self.see(self.model.carros + self.model.semaforos))
 
         self.update()
         self.execute()
@@ -749,29 +783,31 @@ class CarAgent(ap.Agent):
         pass
 
     def update(self):
-        new_x = self.carro.Position[0] + self.carro.Direction[0]
-        new_y = self.carro.Position[1] + self.carro.Direction[1]
+        # new_x = self.carro.Position[0] + self.carro.Direction[0]
+        # new_y = self.carro.Position[1] + self.carro.Direction[1]
 
-        new_hitbox = Hitbox3D(position=[new_x, new_y, 5], size=[10, 10, 5])
+        # new_hitbox = Hitbox3D(position=[new_x, new_y, 5], size=[10, 10, 5])
         
-        for objeto in self.model.carros + self.model.semaforos:
-            if objeto != self:  # Excluir la instancia actual del agente
-                if hasattr(objeto, 'hitbox_light'):
-                    if new_hitbox.collides_with(objeto.hitbox_light):
-                        print("Colision enfrente")
-                        # Detener el carro de inmediato
-                        self.carro.Direction = [0, 0, 0]  # Detener cambiando la dirección
-                        break
-                elif hasattr(objeto, 'hitbox_side'):
-                    print(objeto)
-                    if new_hitbox.collides_with(objeto.hitbox_side):
-                        print("Colision costado")
-                        # Detener el carro de inmediato
-                        self.carro.Direction = [0, 0, 0]  # Detener cambiando la dirección
-                        break
-        else:
-            # No hubo colisión, actualiza la posición
-            self.carro.Position = [new_x, new_y, 5]
+        # for objeto in self.model.carros + self.model.semaforos:
+        #     if objeto != self:  # Excluir la instancia actual del agente
+        #         if hasattr(objeto, 'hitbox_light') and self.crossing != True:
+        #             if new_hitbox.collides_with(objeto.hitbox_light):
+        #                 print("Colision enfrente")
+        #                 # Detener el carro de inmediato
+        #                 self.carro.Direction = [0, 0, 0]  # Detener cambiando la dirección
+                        
+        #                 break
+        #         elif hasattr(objeto, 'hitbox_side'):
+        #             print(objeto)
+        #             if new_hitbox.collides_with(objeto.hitbox_side):
+        #                 print("Colision costado")
+        #                 # Detener el carro de inmediato
+        #                 self.carro.Direction = [0, 0, 0]  # Detener cambiando la dirección
+        #                 break
+        # else:
+        #     # No hubo colisión, actualiza la posición
+        #     self.carro.Position = [new_x, new_y, 5]
+        pass
 
 
     def end(self):
@@ -784,7 +820,7 @@ class SemaforoAgent(ap.Agent):
             carro.check_traffic_light(mensaje)
         pass
 
-    def set_semaforo(self, semaforo):
+    def set_semaforo_hitboxes(self, semaforo):
         self.semaforo = semaforo
         if self.semaforo and not self.hitbox_light:  # Verificar que haya un semáforo y el Hitbox3D no se haya creado
             if self.semaforo.Rotacion == 180:
@@ -838,14 +874,14 @@ class Ciudad(ap.Model):
         Init()
         # Se generan los agentes junto con su instancia de carro
         #self.carros = ap.AgentList(self, self.p.carros, CarAgent)
-        self.carros = ap.AgentList(self, 8, CarAgent)
+        self.carros = ap.AgentList(self, 1, CarAgent)
         self.semaforos = ap.AgentList(self, 12, SemaforoAgent)
 
         for i, agente in enumerate(self.semaforos):
             if i < len(posiciones_semaforos):
                 x, z, rot = posiciones_semaforos[i]
                 agente.semaforo = Semaforo(x, z, rot)
-                agente.set_semaforo(agente.semaforo)
+                agente.set_semaforo_hitboxes(agente.semaforo)
 
         for i, agente in enumerate(self.carros):
             # Asegúrate de que haya suficientes posiciones en la lista
@@ -887,7 +923,6 @@ class Ciudad(ap.Model):
 
         for carro in self.carros:
            carro.step()
-           carro.update()
 
         pygame.display.flip()
         pygame.time.wait(10)

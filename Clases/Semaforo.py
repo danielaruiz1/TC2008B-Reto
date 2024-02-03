@@ -23,38 +23,6 @@ class Semaforo:
         except Exception as e:
             print(f"Error al cargar el objeto: {e}")
 
-    def draw_hitbox_Light(self):
-        glPushMatrix()
-        glTranslatef(2.0, 5.7, 0.0)
-        glScale(1.0, 1.0, 1.0)
-        
-        # Dibujar el hitbox
-        glColor3f(1.0, 0.0, 0.0)  
-        glBegin(GL_QUADS)
-        glVertex3f(-1.0, 0.0, -1.0)
-        glVertex3f(-1.0, 0.0, 1.0)
-        glVertex3f(1.0, 0.0, 1.0)
-        glVertex3f(1.0, 0.0, -1.0)
-        glEnd()
-
-        glPopMatrix()
-
-    def draw_hitbox_side(self):
-        glPushMatrix()
-        glTranslatef(2.0, 0.5, 0.0)
-        glScale(1.0, 1.0, 1.0)
-        
-        # Dibujar el hitbox
-        glColor3f(0.0, 1.0, 0.0)  
-        glBegin(GL_QUADS)
-        glVertex3f(-1.0, 0.0, -1.0)
-        glVertex3f(-1.0, 0.0, 1.0)
-        glVertex3f(1.0, 0.0, 1.0)
-        glVertex3f(1.0, 0.0, -1.0)
-        glEnd()
-
-        glPopMatrix()
-
     def draw(self):
         glPushMatrix()
         glRotatef(-90.0, 1.0, 0.0, 0.0)
