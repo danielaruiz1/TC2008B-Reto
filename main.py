@@ -68,10 +68,10 @@ ontologia_file_path = "pFinal_onto.owl"
 posiciones_entradas = np.array([[-220.0, -8.0],[220.0, 8.0],[-35.0, -220.0], [-48, 220.0], [-180.0, 220.0],[-166.0, -220.0], [166.0, 220.0], [180.0, -220.0]])
 posiciones_finales = np.array([[220.0, -8.0], [-220.0, 8.0], [-35.0, 220.0], [-48, -220.0], [-180.0, -220.0], [-166.0, 220.0], [166.0, -220.0], [180.0, 220.0]])
 
-posiciones_semaforos = np.array([[17.0, -25.0, 180.0], [150.0, -25.0, 180.0], [-197.0, -25.0, 180.0],
+posiciones_semaforos = np.array([[-25.0, 150.0, 90.0], [-25.0, -197.0, 90.0], [-25.0, 17.0, 90.0],
+                                 [17.0, -25.0, 180.0], [150.0, -25.0, 180.0], [-197.0, -25.0, 180.0],
                                  [-67.0, -25.0, 0.0], [-197.0, -25.0, 0.0], [150.0, -25.0, 0.0],
-                                 [-25.0, -197.0, -90], [-25.0, 150.0, -90.0],[-25.0, -67.0, -90.0],
-                                 [-25.0, 150.0, 90.0], [-25.0, -197.0, 90.0], [-25.0, 17.0, 90.0],])
+                                 [-25.0, -197.0, -90], [-25.0, 150.0, -90.0],[-25.0, -67.0, -90.0],])
 
 
 
@@ -761,13 +761,13 @@ class CarAgent(ap.Agent):
         
         for objeto in self.model.carros + self.model.semaforos:
             if objeto != self:  # Excluir la instancia actual del agente
-                # if hasattr(objeto, 'hitbox_light'):
-                #     if new_hitbox.collides_with(objeto.hitbox_light):
-                #         print("Colision enfrente")
-                #         # Detener el carro de inmediato
-                #         self.carro.Direction = [0, 0, 0]  # Detener cambiando la dirección
-                #         break
-                if hasattr(objeto, 'hitbox_side'):
+                if hasattr(objeto, 'hitbox_light'):
+                    if new_hitbox.collides_with(objeto.hitbox_light):
+                        print("Colision enfrente")
+                        # Detener el carro de inmediato
+                        self.carro.Direction = [0, 0, 0]  # Detener cambiando la dirección
+                        break
+                elif hasattr(objeto, 'hitbox_side'):
                     print(objeto)
                     if new_hitbox.collides_with(objeto.hitbox_side):
                         print("Colision costado")
@@ -792,7 +792,6 @@ class SemaforoAgent(ap.Agent):
     def set_semaforo(self, semaforo):
         self.semaforo = semaforo
         if self.semaforo and not self.hitbox_light:  # Verificar que haya un semáforo y el Hitbox3D no se haya creado
-            print("semaforo:", self.semaforo, " x: ", semaforo.Position[0], " y: ", semaforo.Position[1])
             if self.semaforo.Rotacion == 180:
                 self.hitbox_light = Hitbox3D(position=[semaforo.Position[0] * -1 - 10, semaforo.Position[1] + 5, 10], size=[10, 10, 10])
                 self.hitbox_side = Hitbox3D(position=[semaforo.Position[0] * -1 - 20, semaforo.Position[1] + 55, 10], size=[10, 10, 10])
@@ -800,7 +799,7 @@ class SemaforoAgent(ap.Agent):
                 self.hitbox_light = Hitbox3D(position=[semaforo.Position[0] + 10, semaforo.Position[1] * -1 - 5, 10], size=[10, 10, 10])
                 self.hitbox_side = Hitbox3D(position=[semaforo.Position[0] + 10, semaforo.Position[1] * -1 - 55, 10], size=[10, 10, 10])
             elif self.semaforo.Rotacion == 90:
-                self.hitbox_light = Hitbox3D(position=[semaforo.Position[1] * -1 - 43, semaforo.Position[0] * -1 - 3, 10], size=[10, 10, 10])
+                self.hitbox_light = Hitbox3D(position=[semaforo.Position[1] * -1 - 45, semaforo.Position[0] * -1 -40, 10], size=[10, 10, 10])
                 self.hitbox_side = Hitbox3D(position=[semaforo.Position[1] * -1 + 5, semaforo.Position[0] * -1 - 30, 10], size=[10, 10, 10])
             elif self.semaforo.Rotacion == -90:
                 self.hitbox_light = Hitbox3D(position=[semaforo.Position[1] + 45, semaforo.Position[0] * -1 - 10, 10], size=[10, 10, 10])
