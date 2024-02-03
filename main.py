@@ -794,7 +794,7 @@ class SemaforoAgent(ap.Agent):
         if self.semaforo and not self.hitbox_light:  # Verificar que haya un semáforo y el Hitbox3D no se haya creado
             print("semaforo:", self.semaforo, " x: ", semaforo.Position[0], " y: ", semaforo.Position[1])
             if self.semaforo.Rotacion == 180:
-                #self.hitbox_light = Hitbox3D(position=[semaforo.Position[0] * -1 - 10, semaforo.Position[1] + 5, 10], size=[10, 10, 10])
+                self.hitbox_light = Hitbox3D(position=[semaforo.Position[0] * -1 - 10, semaforo.Position[1] + 5, 10], size=[10, 10, 10])
                 self.hitbox_side = Hitbox3D(position=[semaforo.Position[0] * -1 - 20, semaforo.Position[1] + 55, 10], size=[10, 10, 10])
             elif self.semaforo.Rotacion == 0:
                 self.hitbox_light = Hitbox3D(position=[semaforo.Position[0] + 10, semaforo.Position[1] * -1 - 5, 10], size=[10, 10, 10])
