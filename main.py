@@ -68,15 +68,17 @@ ontologia_file_path = "pFinal_onto.owl"
 posiciones_entradas = np.array([[-220.0, -8.0],[220.0, 8.0],[-35.0, -220.0], [-48, 220.0], [-180.0, 220.0],[-166.0, -220.0], [166.0, 220.0], [180.0, -220.0]])
 posiciones_finales = np.array([[220.0, -8.0], [-220.0, 8.0], [-35.0, 220.0], [-48, -220.0], [-180.0, -220.0], [-166.0, 220.0], [166.0, -220.0], [180.0, 220.0]])
 
-posiciones_semaforos = np.array([[-25.0, 150.0, 90.0], [-25.0, -197.0, 90.0], [-25.0, 17.0, 90.0],
-                                 [17.0, -25.0, 180.0], [150.0, -25.0, 180.0], [-197.0, -25.0, 180.0],
-                                 [-67.0, -25.0, 0.0], [-197.0, -25.0, 0.0], [150.0, -25.0, 0.0],
-                                 [-25.0, -197.0, -90], [-25.0, 150.0, -90.0],[-25.0, -67.0, -90.0],])
+posiciones_semaforos = np.array([[-25.0, 150.0, 90.0, 2], [-25.0, -197.0, 90.0, 2], [-25.0, 17.0, 90.0, 2],
+                                 [17.0, -25.0, 180.0, 0], [150.0, -25.0, 180.0, 0], [-197.0, -25.0, 180.0, 0],
+                                 [-67.0, -25.0, 0.0, 0], [-197.0, -25.0, 0.0, 0], [150.0, -25.0, 0.0, 0],
+                                 [-25.0, -197.0, -90, 2], [-25.0, 150.0, -90.0, 2],[-25.0, -67.0, -90.0, 2],])
+
+
 
 #Arreglo para el manejo de texturas
 textures = []
-filename1 = "Texturas/textura0.jpeg"
-filename2 = "Texturas/textura3.jpg"
+filename1 = "TC2008B-Reto/Texturas/textura0.jpeg"
+filename2 = "TC2008B-Reto/Texturas/textura3.jpg"
 
 pygame.init()
 
@@ -155,9 +157,9 @@ def Init():
     glEnable(GL_COLOR_MATERIAL)
     glShadeModel(GL_SMOOTH)           # most obj files expect to be smooth-shaded      
     
-    objetos.append(OBJ("Objetos/SuperRoad.obj", swapyz=True))
+    objetos.append(OBJ("TC2008B-Reto/Objetos/SuperRoad.obj", swapyz=True))
     objetos[0].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
     objetos[1].generate()
 
 def draw_building(x, y, z, width, height, depth):
@@ -681,7 +683,7 @@ with onto:
 class CarAgent(ap.Agent):
 
     def suscribe_traffic_light(self, tl):
-        self.msg = None
+        # self.msg = None
         tl.carros_suscritos.append(self)
         pass
 
@@ -743,6 +745,9 @@ class CarAgent(ap.Agent):
 
         self.BDI(self.see(self.model.carros))
 
+        new_position = np.array(self.carro.Position) + np.array(self.carro.Direction)
+
+
         self.update()
         self.execute()
 
@@ -759,9 +764,14 @@ class CarAgent(ap.Agent):
                 if hasattr(objeto, 'hitbox_light'):
                     if new_hitbox.collides_with(objeto.hitbox_light):
                         print("Colision enfrente")
-                        # Detener el carro de inmediato
-                        self.carro.Direction = [0, 0, 0]  # Detener cambiando la dirección
-                        break
+                        self.suscribe_traffic_light(objeto)
+                        if self.msg == 0:
+                            # Detener el carro de inmediato
+                            self.carro.Direction = [0, 0, 0]  # Detener cambiando la dirección
+                            break
+                        elif self.msg == 1 or self.msg == 2:
+                            self.carro.Direction = self.carro.PastDirection
+                            continue
                 elif hasattr(objeto, 'hitbox_side'):
                     print(objeto)
                     if new_hitbox.collides_with(objeto.hitbox_side):
@@ -769,9 +779,9 @@ class CarAgent(ap.Agent):
                         # Detener el carro de inmediato
                         self.carro.Direction = [0, 0, 0]  # Detener cambiando la dirección
                         break
-        else:
-            # No hubo colisión, actualiza la posición
-            self.carro.Position = [new_x, new_y, 5]
+            else:
+                # No hubo colisión, actualiza la posición
+                self.carro.Position = [new_x, new_y, 5]
 
 
     def end(self):
@@ -780,12 +790,15 @@ class CarAgent(ap.Agent):
 class SemaforoAgent(ap.Agent):
 
     def notify(self, mensaje):
-        for carro in self.carros_suscritos:
+        carros_suscritos_en_model = [carro for carro in self.model.carros if carro in self.carros_suscritos]
+
+        for carro in carros_suscritos_en_model:
             carro.check_traffic_light(mensaje)
         pass
 
     def set_semaforo(self, semaforo):
         self.semaforo = semaforo
+        self.estado = semaforo.Light
         if self.semaforo and not self.hitbox_light:  # Verificar que haya un semáforo y el Hitbox3D no se haya creado
             if self.semaforo.Rotacion == 180:
                 self.hitbox_light = Hitbox3D(position=[semaforo.Position[0] * -1 - 10, semaforo.Position[1] + 5, 10], size=[10, 10, 10])
@@ -827,6 +840,30 @@ class SemaforoAgent(ap.Agent):
         pass
 
     def update(self):
+        if self.tiempo_cambio == 30:
+            for semaforo in self.model.semaforos:
+                if semaforo.estado == 0:
+                    semaforo.estado = -1
+                elif semaforo.estado == 2:
+                    semaforo.estado = 1
+        if self.tiempo_cambio == 40:
+            for semaforo in self.model.semaforos:
+                if semaforo.estado == 1:
+                    semaforo.estado = 0  
+                elif semaforo.estado == -1:
+                    semaforo.estado = 2        
+        if self.tiempo_cambio == 70:
+            for semaforo in self.model.semaforos:
+                if semaforo.estado == 2:
+                    semaforo.estado = 0
+                elif semaforo.estado == 0:
+                    semaforo.estado = 2    
+            self.tiempo_cambio = 0
+            
+        self.tiempo_cambio += 1.0
+
+        mensaje = self.estado
+        self.notify(mensaje)
         pass
 
     def end(self):
@@ -843,15 +880,15 @@ class Ciudad(ap.Model):
 
         for i, agente in enumerate(self.semaforos):
             if i < len(posiciones_semaforos):
-                x, z, rot = posiciones_semaforos[i]
-                agente.semaforo = Semaforo(x, z, rot)
+                x, z, rot, light = posiciones_semaforos[i]
+                agente.semaforo = Semaforo(x, z, rot, light)
                 agente.set_semaforo(agente.semaforo)
 
         for i, agente in enumerate(self.carros):
             # Asegúrate de que haya suficientes posiciones en la lista
             if i < len(posiciones_entradas):
                 x, y = posiciones_entradas[i]
-                agente.carro = Carro(1, self.carros, x, y)
+                agente.carro = Carro(5, self.carros, x, y)
 
                 if y > 200:
                     # Aplicar rotación de 180 grados
@@ -885,6 +922,7 @@ class Ciudad(ap.Model):
         for semaforo in self.semaforos:
            semaforo.step()
 
+
         for carro in self.carros:
            carro.step()
            carro.update()
@@ -916,6 +954,7 @@ class Hitbox3D:
         distance = np.abs(self.position - other_hitbox.position)
         return np.all(distance < min_distance)
     
+
 parameters = {
    "steps": 5000,
    "carros": 8

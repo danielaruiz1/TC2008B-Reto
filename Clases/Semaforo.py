@@ -7,15 +7,19 @@ from OpenGL.GLUT import *
 import numpy as np
 import random
 import math
+
+import sys
+sys.path.append('..')
 from objloader import *
 
 class Semaforo:
-    def __init__(self, x, y, rot):
+    def __init__(self, x, y, rot, light):
         self.Rotacion = rot
         self.Position = [x, y, 0.0]  
-
+        self.Light = light
+            
         try:
-            self.objeto = OBJ("Objetos/Semaforo4.obj", swapyz=True)
+            self.objeto = OBJ("TC2008B-Reto/Objetos/Semaforo4.obj", swapyz=True)
             if self.objeto is not None:
                 self.objeto.generate()
             else:
