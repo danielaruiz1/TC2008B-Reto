@@ -73,8 +73,6 @@ posiciones_semaforos = np.array([[-25.0, 150.0, 90.0], [-25.0, -197.0, 90.0], [-
                                  [-67.0, -25.0, 0.0], [-197.0, -25.0, 0.0], [150.0, -25.0, 0.0],
                                  [-25.0, -197.0, -90], [-25.0, 150.0, -90.0],[-25.0, -67.0, -90.0],])
 
-
-
 #Arreglo para el manejo de texturas
 textures = []
 filename1 = "Texturas/textura0.jpeg"
@@ -745,9 +743,6 @@ class CarAgent(ap.Agent):
 
         self.BDI(self.see(self.model.carros))
 
-        new_position = np.array(self.carro.Position) + np.array(self.carro.Direction)
-
-
         self.update()
         self.execute()
 
@@ -844,7 +839,7 @@ class Ciudad(ap.Model):
         # Se generan los agentes junto con su instancia de carro
         #self.carros = ap.AgentList(self, self.p.carros, CarAgent)
         self.carros = ap.AgentList(self, 8, CarAgent)
-        self.semaforos = ap.AgentList(self, 3, SemaforoAgent)
+        self.semaforos = ap.AgentList(self, 12, SemaforoAgent)
 
         for i, agente in enumerate(self.semaforos):
             if i < len(posiciones_semaforos):
@@ -890,7 +885,6 @@ class Ciudad(ap.Model):
         for semaforo in self.semaforos:
            semaforo.step()
 
-
         for carro in self.carros:
            carro.step()
            carro.update()
@@ -922,7 +916,6 @@ class Hitbox3D:
         distance = np.abs(self.position - other_hitbox.position)
         return np.all(distance < min_distance)
     
-
 parameters = {
    "steps": 5000,
    "carros": 8
