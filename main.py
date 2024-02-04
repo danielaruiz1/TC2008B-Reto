@@ -714,51 +714,47 @@ class CarAgent(ap.Agent):
                     if self.crossing != True:
                         if self not in objeto.carros_suscritos:
                             if new_hitbox.collides_with(objeto.hitbox_light):
-                                print("alo")
                                 self.suscribe_traffic_light(objeto)
                         else: 
                             if self.msg == 0:
-                                print("para")
-                                self.carro.Direction = [0,0,0]
-                                self.moving = False
-                                self.crossing = False
+                                p = [objeto, "light", "stop"]
+                                break
                             else:
-                                print("adelante")
-                                self.carro.Direction = self.carro.PastDirection
-                                objeto.carros_suscritos.remove(self)
-                                p = [objeto, "light"]
+                                p = [objeto, "light", "go"]
+                                break
                     else:
-                        print("crusando")
-                        self.crossing = False
-                        if self in objeto.carros_suscritos:
-                            objeto.carros_suscritos.remove(self)
                         if new_hitbox.collides_with(objeto.hitbox_side):
                             p = [objeto, "side"]
+                            if self in objeto.carros_suscritos:
+                                objeto.carros_suscritos.remove(self)
+                            break
 
                 elif hasattr(objeto, "carro"):
-                    print("carro")
                     x, y, _ = self.carro.Position
                     x2, y2, _ = objeto.carro.Position
                     distancia = math.sqrt((x2 - x)**2 + (y2 - y)**2)
 
-                    if(objeto.crossing == True and self.crossing == False):
-                        '''Esto para evitar que un carro avance cuando uno este en medio
-                       pues el problema principal son las velocidades'''
-                        if (distancia <= 10):
-                            # Se debe detener
-                            # Probable hace falta ajustar la distancia
-                            self.moving = False
-                            #self.carro.Direction = [0,0,0]
-                            pass
-                    elif(objeto.crossing == True and self.crossing == True):
-                        '''Cuando el carro y otro mas esten dentro de las interseccion
-                        se pueda decidir cual va primero'''
-                        self.moving = True
-                        if (distancia <= 20 and objeto.crossing == True):
-                            p = [objeto, "carro"]
-                    else:
-                        self.moving = True
-                            
+                    # if(objeto.crossing == False and self.crossing == True):
+                    #     '''Esto para evitar que un carro avance cuando uno este en medio
+                    #    pues el problema principal son las velocidades'''
+                    #     if (distancia <= 16):
+                    #         # Se debe detener
+                    #         # Probable hace falta ajustar la distancia
+                    #         print("detuvo")
+                    #         self.moving = False
+                    #         #self.carro.Direction = [0,0,0]
+                    #         pass
+                    # elif(objeto.crossing == True and self.crossing == True):
+                    #     '''Cuando el carro y otro mas esten dentro de las interseccion
+                    #     se pueda decidir cual va primero'''
+                    #     #self.carro.Direction = self.carro.PastDirection
+                    #     self.moving = True
+                    #     if (distancia <= 20):
+                    #         print("carro dentro detenido")
+                    #         p = [objeto, "carro"]
+                    #         self.moving = False
+                    # else:
+                    #     self.moving = True    
         return p
     
     def brf(self, p):
@@ -767,7 +763,11 @@ class CarAgent(ap.Agent):
         self.this_car.is_in_place = [Place(at_position = str(currentPos))]
 
         if(p[1] == "light"):
-            self.crossing = True
+            if(p[2] == "stop"):
+                self.moving = False
+            else:
+                self.moving = True
+                self.crossing = True
             self.intentionSucceded = True
         elif(p[1] == "side"):
             self.crossing = False
@@ -794,8 +794,8 @@ class CarAgent(ap.Agent):
     def filter(self, options):
         # Que accion va realizar
         # En este caso puede ser aleatorio
-        # return random.choice(options)
-        return 0
+        return random.choice(options)
+        #return 0
         pass
 
     def plan(self, selected_option):
@@ -814,7 +814,13 @@ class CarAgent(ap.Agent):
 
     def execute(self):
        # Ejecutar el plan
-       self.carro.Position = [self.carro.Position[0] + self.carro.Direction[0],self.carro.Position[1] + self.carro.Direction[1],5]
+        if(self.moving == True):
+            if(self.I == 0):
+                self.carro.Position = [self.carro.Position[0] + self.carro.Direction[0],self.carro.Position[1] + self.carro.Direction[1],5]
+            elif(self.I == 1):
+                self.carro.Position = [self.carro.Position[0] + self.carro.Direction[0],self.carro.Position[1] + self.carro.Direction[1],5]
+            elif(self.I == 2):
+                self.carro.Position = [self.carro.Position[0] + self.carro.Direction[0],self.carro.Position[1] + self.carro.Direction[1],5]
 
     def initBeliefs(self, initPos):
 
@@ -902,19 +908,6 @@ class SemaforoAgent(ap.Agent):
 
     def step(self):
         self.semaforo.draw()
-    
-        # if(self.tiempo_cambio == 30):
-        #     self.estado = 2
-        # elif(self.tiempo_cambio == 60):
-        #     self.estado = 1
-        # elif(self.tiempo_cambio == 70):
-        #     self.estado = 0
-        #     self.tiempo_cambio = 0
-
-        # self.tiempo_cambio += 1.0
-
-        # mensaje = self.estado
-        # self.notify(mensaje)
         self.update()
         pass
 
