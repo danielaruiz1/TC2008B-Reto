@@ -63,9 +63,11 @@ radius = 200
 #Arreglo para objetos
 objetos = []
 
-ontologia_file_path = "pFinal_onto.owl"
+ontologia_file_path = "TC2008B-Reto/pFinal_onto.owl"
 
-posiciones_entradas = np.array([[-220.0, -8.0],[220.0, 8.0],[-35.0, -220.0], [-48, 220.0], [-180.0, 220.0],[-166.0, -220.0], [166.0, 220.0], [180.0, -220.0]])
+# Calle larga: 1 y 2
+# Calles laterales: 3 y 4
+posiciones_entradas = np.array([[-300.0, -8.0, 1],[-220.0, -8.0, 1],[300.0, 8.0, 2],[220.0, 8.0,2],[-35.0, -220.0,3], [-48, 220.0,4], [-180.0, 220.0,3],[-166.0, -220.0,4], [166.0, 220.0,4], [180.0, -220.0,4]])
 posiciones_finales = np.array([[220.0, -8.0], [-220.0, 8.0], [-35.0, 220.0], [-48, -220.0], [-180.0, -220.0], [-166.0, 220.0], [166.0, -220.0], [180.0, 220.0]])
 
 posiciones_semaforos = np.array([[-25.0, 150.0, 90.0, 2], [-25.0, -197.0, 90.0, 2], [-25.0, 17.0, 90.0, 2],
@@ -75,8 +77,8 @@ posiciones_semaforos = np.array([[-25.0, 150.0, 90.0, 2], [-25.0, -197.0, 90.0, 
 
 #Arreglo para el manejo de texturas
 textures = []
-filename1 = "Texturas/textura0.jpeg"
-filename2 = "Texturas/textura3.jpg"
+filename1 = "TC2008B-Reto/Texturas/textura0.jpeg"
+filename2 = "TC2008B-Reto/Texturas/textura3.jpg"
 
 pygame.init()
 
@@ -155,9 +157,9 @@ def Init():
     glEnable(GL_COLOR_MATERIAL)
     glShadeModel(GL_SMOOTH)           # most obj files expect to be smooth-shaded      
     
-    objetos.append(OBJ("Objetos/SuperRoad.obj", swapyz=True))
+    objetos.append(OBJ("TC2008B-Reto/Objetos/SuperRoad.obj", swapyz=True))
     objetos[0].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
     objetos[1].generate()
 
 def draw_building(x, y, z, width, height, depth):
@@ -705,9 +707,19 @@ class CarAgent(ap.Agent):
         new_y = self.carro.Position[1] + self.carro.Direction[1]
 
         new_hitbox = Hitbox3D(position=[new_x, new_y, 5], size=[10, 10, 5])
+        self.hitbox = new_hitbox
         
         p = [[],[]]
-
+        
+        for car in self.model.carros:
+            if car != self:
+                if car.carro.Calle == self.carro.Calle:
+                    if self.hitbox.car_collides_with_car(car.hitbox):
+                        print("ghdgdgdgdg")
+                        self.carro.Direction = [0,0,0]
+                    else:
+                        self.carro.Direction = self.carro.PastDirection
+                    
         for objeto in e:
             if objeto != self:  # Excluir la instancia actual del agente
                 if hasattr(objeto, 'semaforo'):
@@ -966,8 +978,8 @@ class Ciudad(ap.Model):
         for i, agente in enumerate(self.carros):
             # Asegúrate de que haya suficientes posiciones en la lista
             if i < len(posiciones_entradas):
-                x, y = posiciones_entradas[i]
-                agente.carro = Carro(6, self.carros, x, y)
+                x, y, calle = posiciones_entradas[i]
+                agente.carro = Carro(6, self.carros, x, y, calle)
 
                 if y > 200:
                     # Aplicar rotación de 180 grados
@@ -1030,6 +1042,11 @@ class Hitbox3D:
         min_distance = (self.size + other_hitbox.size) / 2
         distance = np.abs(self.position - other_hitbox.position)
         return np.all(distance < min_distance)
+    
+    def car_collides_with_car(self, other_hitbox):
+        # Verifica si hay colisión entre dos hitboxes 3D
+        distance = np.abs(self.position - other_hitbox.position)
+        return np.all(distance < 20)
     
 parameters = {
    "steps": 5000,

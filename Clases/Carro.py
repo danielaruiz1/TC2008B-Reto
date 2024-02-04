@@ -9,7 +9,7 @@ import math
 from objloader import *
 
 class Carro:
-    def __init__(self, vel, carros, x, y):
+    def __init__(self, vel, carros, x, y, calle):
         self.listCarros = carros
         self.vel = vel
         self.Rotation = 0.0
@@ -17,16 +17,19 @@ class Carro:
         
         self.Position = [x, y, 5]
         self.Direction = [random.uniform(0.5, 1.0), random.uniform(0.5, 1.0), 5]
-        self.PastDirection = self.Direction
 
         m = math.sqrt(self.Direction[0]**2 + self.Direction[2]**2)
         self.Direction[0] /= m
         self.Direction[2] /= m
         self.Direction[0] *= vel
         self.Direction[2] *= vel
+        
+        self.PastDirection = self.Direction
+        
+        self.Calle = calle
 
         try:
-            self.objeto = OBJ("Objetos/Camaro.obj", swapyz=True)
+            self.objeto = OBJ("TC2008B-Reto/Objetos/Camaro.obj", swapyz=True)
             if self.objeto is not None:
                 self.objeto.generate()
             else:
