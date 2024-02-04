@@ -749,6 +749,7 @@ class CarAgent(ap.Agent):
 
         if(p[1] == "light"):
             self.crossing = True
+            self.intentionSucceded = True
         elif(p[1] == "side"):
             self.crossing = False
         elif(p[1] == "carro"):
@@ -767,13 +768,17 @@ class CarAgent(ap.Agent):
 
     def options(self):
         # Que acciones puede realizar
+        # Saca las tres opciones que puede sacar
+        # 0 = Adelante, 1 = Derecha, 2 = Izquierda
         pass
 
     def filter(self):
         # Que accion va realizar
+        # En este caso puede ser aleatorio
         pass
 
     def plan(self):
+       # Guardar la opcion que salio del filter aqui
        print("Plan chilo")
        pass
 
@@ -788,6 +793,7 @@ class CarAgent(ap.Agent):
            self.currentPlan = self.plan()
 
     def execute(self):
+       # Ejecutar el plan 
        self.carro.Position = [self.carro.Position[0] + self.carro.Direction[0],self.carro.Position[1] + self.carro.Direction[1],5]
 
     def initBeliefs(self, initPos):
