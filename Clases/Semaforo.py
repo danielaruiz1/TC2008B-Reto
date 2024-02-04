@@ -19,7 +19,7 @@ class Semaforo:
         self.Light = light
             
         try:
-            self.objeto = OBJ("TC2008B-Reto/Objetos/Semaforo4.obj", swapyz=True)
+            self.objeto = OBJ("Objetos/Semaforo4.obj", swapyz=True)
             if self.objeto is not None:
                 self.objeto.generate()
             else:
