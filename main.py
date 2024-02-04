@@ -649,6 +649,10 @@ with onto:
       domain = [Traffic_light]
       range = [str]
 
+    class fellow_car_intention(ObjectProperty):
+        domain = [Car]
+        range = [int]
+
     #Velocidad del carro
     class has_speed_car(DataProperty):
       domain = [Car]
@@ -658,10 +662,15 @@ with onto:
       domain = [Car]
       range = [float]
 
-    #Propiedad para describir los carros que tenga adelante
+    #Propiedad para describir los carros que tenga el semaforo
     class cars_within_reach(ObjectProperty):
       domain = [Traffic_light]
       range = [int]
+
+    #Propiedad para describir los carros que tenga adelante
+    class cars_nearby(ObjectProperty):
+      domain = [Car]
+      range = [str]
 
     #Property to describe the place of an entity in the world
     class is_in_place(ObjectProperty):
@@ -687,7 +696,6 @@ class CarAgent(ap.Agent):
     def suscribe_traffic_light(self, tl):
         self.msg = None
         tl.carros_suscritos.append(self)
-        pass
 
     def check_traffic_light(self, msg):
         self.msg = msg
@@ -698,46 +706,89 @@ class CarAgent(ap.Agent):
 
         new_hitbox = Hitbox3D(position=[new_x, new_y, 5], size=[10, 10, 5])
         
-        p = []
+        p = [[],[]]
 
         for objeto in e:
             if objeto != self:  # Excluir la instancia actual del agente
                 if hasattr(objeto, 'semaforo'):
                     if self.crossing != True:
                         if new_hitbox.collides_with(objeto.hitbox_light):
-                            print("Colision enfrente")
-                            self.crossing = True
-                            p.append([objeto, "light"])
-                            p.append(objeto.carros_suscritos)
+                            p = [objeto, "light"]
                     else:
                         if new_hitbox.collides_with(objeto.hitbox_side):
-                            print("Colision costado")
-                            self.crossing = False
-                            p.append([objeto, "side"])
-        else:
-            # No hubo colisión, actualiza la posición
-            self.carro.Position = [new_x, new_y, 5]
+                            p = [objeto, "side"]
+                elif hasattr(objeto, "carro"):
+                    x, y, _ = self.carro.Position
+                    x2, y2, _ = objeto.carro.Position
+                    distancia = math.sqrt((x2 - x)**2 + (y2 - y)**2)
 
+                    if(objeto.crossing == True and self.crossing == False):
+                        '''Esto para evitar que un carro avance cuando uno este en medio
+                       pues el problema principal son las velocidades'''
+                        if (distancia <= 15):
+                            # Se debe detener
+                            # Probable hace falta ajustar la distancia
+                            self.moving = False
+                            self.carro.Direction = [0,0,0]
+                            pass
+                    elif(objeto.crossing == True and self.crossing == True):
+                        '''Cuando el carro y otro mas esten dentro de las interseccion
+                        se pueda decidir cual va primero'''
+                        self.moving = True
+                        if (distancia <= 30 and objeto.crossing == True):
+                            p = [objeto, "carro"]
+                    else:
+                        self.moving = True
+                            
         return p
     
     def brf(self, p):
-       pass
+       # Revisar el semaforo
+        currentPos = self.carro.Position
+        self.this_car.is_in_place = [Place(at_position = str(currentPos))]
+
+        if(p[1] == "light"):
+            self.crossing = True
+        elif(p[1] == "side"):
+            self.crossing = False
+        elif(p[1] == "carro"):
+            if(self.action == 0 and p[0].action == 0):
+                self.moving = True
+                # Avance sin problema
+                pass
+            elif(self.action == 1 and p[0].action != 2):
+                self.moving = True
+                # Avance sin problemas
+                pass
+            elif(self.action == 2):
+                self.moving = False
+                # Detenerse
+                pass
 
     def options(self):
-       pass
+        # Que acciones puede realizar
+        pass
 
     def filter(self):
-       pass
+        # Que accion va realizar
+        pass
 
     def plan(self):
+       print("Plan chilo")
        pass
 
     def BDI(self, p):
        
-       print(p)
+       self.brf(p)
+
+       if self.intentionSucceded:
+           self.intentionSucceded = False
+           self.D = self.options()
+           self.I = self.filter()
+           self.currentPlan = self.plan()
 
     def execute(self):
-       pass
+       self.carro.Position = [self.carro.Position[0] + self.carro.Direction[0],self.carro.Position[1] + self.carro.Direction[1],5]
 
     def initBeliefs(self, initPos):
 
@@ -760,9 +811,10 @@ class CarAgent(ap.Agent):
     def setup(self):
         self.carro = None
         self.msg = None
-        self.action = 0 # 0 = Del., 1 = Der., 2 = Izq., 3 = Atras
+        self.action = None # 0 = Del., 1 = Der., 2 = Izq.
         self.crossing = False
         self.firstStep = True
+        self.moving = True
         self.hitbox = Hitbox3D(position=[0, 0, 0], size=[10, 10, 5])  # Ajusta el tamaño según tus necesidades
 
     def step(self):
@@ -777,36 +829,11 @@ class CarAgent(ap.Agent):
 
         self.BDI(self.see(self.model.carros + self.model.semaforos))
 
-        self.update()
         self.execute()
 
         pass
 
     def update(self):
-        # new_x = self.carro.Position[0] + self.carro.Direction[0]
-        # new_y = self.carro.Position[1] + self.carro.Direction[1]
-
-        # new_hitbox = Hitbox3D(position=[new_x, new_y, 5], size=[10, 10, 5])
-        
-        # for objeto in self.model.carros + self.model.semaforos:
-        #     if objeto != self:  # Excluir la instancia actual del agente
-        #         if hasattr(objeto, 'hitbox_light') and self.crossing != True:
-        #             if new_hitbox.collides_with(objeto.hitbox_light):
-        #                 print("Colision enfrente")
-        #                 # Detener el carro de inmediato
-        #                 self.carro.Direction = [0, 0, 0]  # Detener cambiando la dirección
-                        
-        #                 break
-        #         elif hasattr(objeto, 'hitbox_side'):
-        #             print(objeto)
-        #             if new_hitbox.collides_with(objeto.hitbox_side):
-        #                 print("Colision costado")
-        #                 # Detener el carro de inmediato
-        #                 self.carro.Direction = [0, 0, 0]  # Detener cambiando la dirección
-        #                 break
-        # else:
-        #     # No hubo colisión, actualiza la posición
-        #     self.carro.Position = [new_x, new_y, 5]
         pass
 
 
@@ -874,7 +901,7 @@ class Ciudad(ap.Model):
         Init()
         # Se generan los agentes junto con su instancia de carro
         #self.carros = ap.AgentList(self, self.p.carros, CarAgent)
-        self.carros = ap.AgentList(self, 1, CarAgent)
+        self.carros = ap.AgentList(self, 4, CarAgent)
         self.semaforos = ap.AgentList(self, 12, SemaforoAgent)
 
         for i, agente in enumerate(self.semaforos):
