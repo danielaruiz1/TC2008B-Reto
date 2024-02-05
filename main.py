@@ -769,21 +769,24 @@ class CarAgent(ap.Agent):
                 self.moving = True
                 self.crossing = True
             self.intentionSucceded = True
+            print("toco semaforo")
         elif(p[1] == "side"):
+            print("Toco")
             self.crossing = False
         elif(p[1] == "carro"):
-            if(self.action == 0 and p[0].action == 0):
-                self.moving = True
-                # Avance sin problema
-                pass
-            elif(self.action == 1 and p[0].action != 2):
-                self.moving = True
-                # Avance sin problemas
-                pass
-            elif(self.action == 2):
-                self.moving = False
-                # Detenerse
-                pass
+            # if(self.action == 0 and p[0].action == 0):
+            #     self.moving = True
+            #     # Avance sin problema
+            #     pass
+            # elif(self.action == 1 and p[0].action != 2):
+            #     self.moving = True
+            #     # Avance sin problemas
+            #     pass
+            # elif(self.action == 2):
+            #     self.moving = False
+            #     # Detenerse
+            #     pass
+            pass
 
     def options(self):
         # Que acciones puede realizar
@@ -799,10 +802,9 @@ class CarAgent(ap.Agent):
         pass
 
     def plan(self, selected_option):
-       # Guardar la opcion que salio del filter aqui
-       self.action = selected_option 
-       pass
-
+        # Guardar la opcion que salio del filter aqui
+        return selected_option 
+       
     def BDI(self, p):
        self.brf(p)
 
@@ -813,14 +815,70 @@ class CarAgent(ap.Agent):
            self.currentPlan = self.plan(self.I)
 
     def execute(self):
-       # Ejecutar el plan
-        if(self.moving == True):
-            if(self.I == 0):
-                self.carro.Position = [self.carro.Position[0] + self.carro.Direction[0],self.carro.Position[1] + self.carro.Direction[1],5]
-            elif(self.I == 1):
-                self.carro.Position = [self.carro.Position[0] + self.carro.Direction[0],self.carro.Position[1] + self.carro.Direction[1],5]
-            elif(self.I == 2):
-                self.carro.Position = [self.carro.Position[0] + self.carro.Direction[0],self.carro.Position[1] + self.carro.Direction[1],5]
+        # Ejecutar el plan
+        if self.moving:
+            if not self.crossing:
+                self.currentPlan = 0
+
+            if self.currentPlan == 0:
+                self.move_forward()
+            elif self.currentPlan == 1:
+                self.rotate_and_move(-90)
+            elif self.currentPlan == 2:
+                self.rotate_and_move(90)
+                #self.move_forward()
+
+    def move_forward(self):
+        self.carro.Position = [
+            self.carro.Position[0] + self.carro.Direction[0],
+            self.carro.Position[1] + self.carro.Direction[1],
+            5
+        ]
+        self.rotation_done = False
+
+    def rotate_and_move(self, angle):
+        if not hasattr(self, 'distance_traveled'):
+            self.distance_traveled = 0
+
+        if angle == 90:
+            distancia_deseada = 37
+        elif angle == -90:
+            distancia_deseada = 22
+        else:
+            return  # Manejar otros ángulos no implementado
+
+        if self.distance_traveled < distancia_deseada:
+            self.move_forward()
+            self.distance_traveled += np.linalg.norm(self.carro.Direction[:2])  # Distancia en el plano XY
+            self.rotation_done = False
+
+            print("Avanzando. Distancia recorrida:", self.distance_traveled)
+        else:
+            if not self.rotation_done:
+                self.carro.Rotation += angle
+                self.carro.Rotation %= 360  # Asegurar que el ángulo esté en el rango [0, 360)
+                self.rotation_done = True  # Marcar que el giro se ha completado
+
+                print("Girando. Nuevo ángulo:", self.carro.Rotation)
+
+            # Ajustar la dirección utilizando la función de rotación de NumPy
+            if self.rotation_done:
+                print("done")
+                angle_radians = math.radians(angle)
+                rotation_matrix = np.array([[np.cos(angle_radians), -np.sin(angle_radians)],
+                                        [np.sin(angle_radians), np.cos(angle_radians)]])
+
+                # Aplicar la rotación a la dirección (solo en el plano XY)
+                rotated_direction = np.dot(rotation_matrix, self.carro.Direction[:2])
+                self.carro.Direction[0] = rotated_direction[0]
+                self.carro.Direction[1] = rotated_direction[1]
+
+                print("EEEEEEEEE: ", self.moving)
+
+                self.distance_traveled = 0  # Reiniciar la distancia después del giro completo
+                print("Dirección ajustada después del giro:", self.carro.Direction)
+                self.currentPlan = 0
+                self.move_forward()
 
     def initBeliefs(self, initPos):
 
@@ -848,6 +906,8 @@ class CarAgent(ap.Agent):
         self.firstStep = True
         self.moving = True
         self.hitbox = Hitbox3D(position=[0, 0, 0], size=[10, 10, 5])  # Ajusta el tamaño según tus necesidades
+        self.rotation_done = False
+        self.d_travelled = 0
 
     def step(self):
        # Dibujo del carro
@@ -886,17 +946,20 @@ class SemaforoAgent(ap.Agent):
         self.estado = semaforo.Light
         if self.semaforo and not self.hitbox_light:  # Verificar que haya un semáforo y el Hitbox3D no se haya creado
             if self.semaforo.Rotacion == 180:
-                self.hitbox_light = Hitbox3D(position=[semaforo.Position[0] * -1 - 10, semaforo.Position[1] + 5, 10], size=[13, 13, 13])
-                self.hitbox_side = Hitbox3D(position=[semaforo.Position[0] * -1 - 20, semaforo.Position[1] + 55, 10], size=[13, 13, 13])
+                self.hitbox_light = Hitbox3D(position=[semaforo.Position[0] * -1 - 10, semaforo.Position[1] + 5, 10], size=[7, 7, 7])
+                self.hitbox_side = Hitbox3D(position=[semaforo.Position[0] * -1 - 20, semaforo.Position[1] + 55, 10], size=[7, 7, 7])
             elif self.semaforo.Rotacion == 0:
-                self.hitbox_light = Hitbox3D(position=[semaforo.Position[0] + 10, semaforo.Position[1] * -1 - 5, 10], size=[13, 13, 13])
-                self.hitbox_side = Hitbox3D(position=[semaforo.Position[0] + 10, semaforo.Position[1] * -1 - 55, 10], size=[13, 13, 13])
+                self.hitbox_light = Hitbox3D(position=[semaforo.Position[0] + 10, semaforo.Position[1] * -1 - 5, 10], size=[7, 7, 7])
+                self.hitbox_side = Hitbox3D(position=[semaforo.Position[0] + 10, semaforo.Position[1] * -1 - 55, 10], size=[7, 7, 7])
             elif self.semaforo.Rotacion == 90:
-                self.hitbox_light = Hitbox3D(position=[semaforo.Position[1] * -1 - 45, semaforo.Position[0] * -1 -40, 10], size=[13, 13, 13])
-                self.hitbox_side = Hitbox3D(position=[semaforo.Position[1] * -1 + 5, semaforo.Position[0] * -1 - 30, 10], size=[13, 13, 13])
+                self.hitbox_light = Hitbox3D(position=[semaforo.Position[1] * -1 - 45, semaforo.Position[0] * -1 -40, 10], size=[7, 7, 7])
+                self.hitbox_side = Hitbox3D(position=[semaforo.Position[1] * -1 + 5, semaforo.Position[0] * -1 - 30, 10], size=[7, 7, 7])
             elif self.semaforo.Rotacion == -90:
-                self.hitbox_light = Hitbox3D(position=[semaforo.Position[1] + 45, semaforo.Position[0] * -1 - 10, 10], size=[13, 13, 13])
-                self.hitbox_side = Hitbox3D(position=[semaforo.Position[1] - 5, semaforo.Position[0] + 40, 10], size=[13, 13, 13])
+                self.hitbox_light = Hitbox3D(position=[semaforo.Position[1] + 45, semaforo.Position[0] * -1 - 10, 10], size=[7, 7, 7])
+                self.hitbox_side = Hitbox3D(position=[semaforo.Position[1] - 5, semaforo.Position[0] + 40, 10], size=[7, 7, 7])
+            
+            self.semaforo.hitbox_light = self.hitbox_light
+            self.semaforo.hitbox_side = self.hitbox_light
 
     def setup(self):
         self.semaforo = None
@@ -947,7 +1010,7 @@ class Ciudad(ap.Model):
         Init()
         # Se generan los agentes junto con su instancia de carro
         #self.carros = ap.AgentList(self, self.p.carros, CarAgent)
-        self.carros = ap.AgentList(self, 8, CarAgent)
+        self.carros = ap.AgentList(self, 4, CarAgent)
         self.semaforos = ap.AgentList(self, 12, SemaforoAgent)
 
         for i, agente in enumerate(self.semaforos):
@@ -992,10 +1055,10 @@ class Ciudad(ap.Model):
         displayobj()
 
         for semaforo in self.semaforos:
-           semaforo.step()
+            semaforo.step()
 
         for carro in self.carros:
-           carro.step()
+            carro.step()
 
         pygame.display.flip()
         pygame.time.wait(10)
@@ -1013,6 +1076,7 @@ class Ciudad(ap.Model):
        pygame.quit()
        sys.exit()
 
+
 class Hitbox3D:
     def __init__(self, position, size):
         self.position = np.array(position)
@@ -1024,6 +1088,7 @@ class Hitbox3D:
         distance = np.abs(self.position - other_hitbox.position)
         return np.all(distance < min_distance)
     
+
 parameters = {
    "steps": 5000,
    "carros": 8

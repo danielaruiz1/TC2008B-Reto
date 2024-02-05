@@ -21,9 +21,9 @@ class Carro:
 
         m = math.sqrt(self.Direction[0]**2 + self.Direction[2]**2)
         self.Direction[0] /= m
-        self.Direction[2] /= m
+        self.Direction[1] /= m
         self.Direction[0] *= vel
-        self.Direction[2] *= vel
+        self.Direction[1] *= vel
 
         try:
             self.objeto = OBJ("Objetos/Camaro.obj", swapyz=True)
@@ -52,8 +52,3 @@ class Carro:
 
         self.Position[0] = new_x
         self.Position[1] = new_y
-
-
-
-
-
