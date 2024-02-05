@@ -65,9 +65,8 @@ objetos = []
 
 ontologia_file_path = "TC2008B-Reto/pFinal_onto.owl"
 
-# Calle larga: 1 y 2
-# Calles laterales: 3 y 4
-posiciones_entradas = np.array([[-300.0, -8.0, 1],[-220.0, -8.0, 1],[300.0, 8.0, 2],[220.0, 8.0,2],[-35.0, -220.0,3], [-48, 220.0,4], [-180.0, 220.0,3],[-166.0, -220.0,4], [166.0, 220.0,4], [180.0, -220.0,4]])
+
+posiciones_entradas = np.array([[-300.0, -8.0],[-220.0, -8.0],[300.0, 8.0],[220.0, 8.0],[-35.0, -220.0], [-48, 220.0], [-180.0, 220.0],[-166.0, -220.0], [166.0, 220.0], [180.0, -220.0]])
 posiciones_finales = np.array([[220.0, -8.0], [-220.0, 8.0], [-35.0, 220.0], [-48, -220.0], [-180.0, -220.0], [-166.0, 220.0], [166.0, -220.0], [180.0, 220.0]])
 
 posiciones_semaforos = np.array([[-25.0, 150.0, 90.0, 2], [-25.0, -197.0, 90.0, 2], [-25.0, 17.0, 90.0, 2],
@@ -713,12 +712,24 @@ class CarAgent(ap.Agent):
         
         for car in self.model.carros:
             if car != self:
-                if car.carro.Calle == self.carro.Calle:
-                    if self.hitbox.car_collides_with_car(car.hitbox):
-                        print("ghdgdgdgdg")
-                        self.carro.Direction = [0,0,0]
-                    else:
-                        self.carro.Direction = self.carro.PastDirection
+                if self.hitbox.car_collides_with_car(car.hitbox):
+                    self.carro.Direction = [0,0,0]
+                else:
+                    self.carro.Direction = self.carro.PastDirection
+                    
+        # En caso de que dos carros se detengan por una colisión y ya no avancen
+        if self.carro.Direction == [0,0,0]:
+            minCar = None
+            minDistance = 10000000
+            for car in self.model.carros:
+                if car!=self and car.carro.Direction == [0,0,0]:
+                    if self.hitbox.get_car_to_car_distance(car.hitbox) < minDistance:
+                        minDistance = self.hitbox.get_car_to_car_distance(car.hitbox)
+                        minCar = car
+            if minCar != None:
+                cars_choice=[self,minCar]
+                car_to_move=random.choice(cars_choice)
+                car_to_move.carro.Direction = car_to_move.carro.PastDirection
                     
         for objeto in e:
             if objeto != self:  # Excluir la instancia actual del agente
@@ -1034,8 +1045,8 @@ class Ciudad(ap.Model):
         for i, agente in enumerate(self.carros):
             # Asegúrate de que haya suficientes posiciones en la lista
             if i < len(posiciones_entradas):
-                x, y, calle = posiciones_entradas[i]
-                agente.carro = Carro(6, self.carros, x, y, calle)
+                x, y = posiciones_entradas[i]
+                agente.carro = Carro(6, self.carros, x, y)
 
                 if y > 200:
                     # Aplicar rotación de 180 grados
@@ -1105,7 +1116,11 @@ class Hitbox3D:
         distance = np.abs(self.position - other_hitbox.position)
         return np.all(distance < 22)
     
-
+    def get_car_to_car_distance(self, other_hitbox):
+        # Verifica si hay colisión entre dos hitboxes 3D
+        distance = np.abs(self.position - other_hitbox.position)
+        return np.linalg.norm(distance) 
+    
 parameters = {
    "steps": 5000,
    "carros": 8

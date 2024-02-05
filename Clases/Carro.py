@@ -9,7 +9,7 @@ import math
 from objloader import *
 
 class Carro:
-    def __init__(self, vel, carros, x, y, calle):
+    def __init__(self, vel, carros, x, y):
         self.listCarros = carros
         self.vel = vel
         self.Rotation = 0.0
@@ -24,9 +24,6 @@ class Carro:
         self.Direction[1] /= m
         self.Direction[0] *= vel
         self.Direction[1] *= vel
-        
-        self.Calle = calle
-
 
         try:
             self.objeto = OBJ("TC2008B-Reto/Objetos/Camaro.obj", swapyz=True)
