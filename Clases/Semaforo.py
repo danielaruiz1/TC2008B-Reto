@@ -17,6 +17,8 @@ class Semaforo:
         self.Rotacion = rot
         self.Position = [x, y, 0.0]  
         self.Light = light
+        self.hitbox_light = None
+        self.hitbox_side = None
             
         try:
             self.objeto = OBJ("Objetos/Semaforo4.obj", swapyz=True)
@@ -27,38 +29,6 @@ class Semaforo:
         except Exception as e:
             print(f"Error al cargar el objeto: {e}")
 
-    def draw_hitbox_Light(self):
-        glPushMatrix()
-        glTranslatef(2.0, 5.7, 0.0)
-        glScale(1.0, 1.0, 1.0)
-        
-        # Dibujar el hitbox
-        glColor3f(1.0, 0.0, 0.0)  
-        glBegin(GL_QUADS)
-        glVertex3f(-1.0, 0.0, -1.0)
-        glVertex3f(-1.0, 0.0, 1.0)
-        glVertex3f(1.0, 0.0, 1.0)
-        glVertex3f(1.0, 0.0, -1.0)
-        glEnd()
-
-        glPopMatrix()
-
-    def draw_hitbox_side(self):
-        glPushMatrix()
-        glTranslatef(2.0, 0.5, 0.0)
-        glScale(1.0, 1.0, 1.0)
-        
-        # Dibujar el hitbox
-        glColor3f(0.0, 1.0, 0.0)  
-        glBegin(GL_QUADS)
-        glVertex3f(-1.0, 0.0, -1.0)
-        glVertex3f(-1.0, 0.0, 1.0)
-        glVertex3f(1.0, 0.0, 1.0)
-        glVertex3f(1.0, 0.0, -1.0)
-        glEnd()
-
-        glPopMatrix()
-
     def draw(self):
         glPushMatrix()
         glRotatef(-90.0, 1.0, 0.0, 0.0)
@@ -66,5 +36,66 @@ class Semaforo:
         glTranslatef(self.Position[0], self.Position[1], 0.0)
         glScale(7.0, 7.0, 7.0)
         self.objeto.render()
+
+        # glColor3fv((1, 0, 0))  # Color rojo para las hitboxes
+        # if self.hitbox_light:
+        #     print("hitbox_light")
+        #     self.draw_hitbox(self.hitbox_light)
+        # if self.hitbox_side:
+        #     print("hitbox_side")
+        #     self.draw_hitbox(self.hitbox_side)
+
+        glPopMatrix()
+
+    def draw_hitbox(self, hitbox):
+        print(hitbox.position[0])
+        glPushMatrix()
+        glTranslatef(hitbox.position[0], hitbox.position[1], hitbox.position[2])
+        glTranslatef(0,0,0)
+        glScalef(1,1,1)
+
+        # Dibujar el cubo usando líneas
+        glBegin(GL_LINES)
+        # Cara frontal
+        glVertex3f(-0.5, -0.5, -0.5)
+        glVertex3f(0.5, -0.5, -0.5)
+
+        glVertex3f(0.5, -0.5, -0.5)
+        glVertex3f(0.5, 0.5, -0.5)
+
+        glVertex3f(0.5, 0.5, -0.5)
+        glVertex3f(-0.5, 0.5, -0.5)
+
+        glVertex3f(-0.5, 0.5, -0.5)
+        glVertex3f(-0.5, -0.5, -0.5)
+
+        # Conexiones entre caras
+        glVertex3f(-0.5, -0.5, -0.5)
+        glVertex3f(-0.5, -0.5, 0.5)
+
+        glVertex3f(0.5, -0.5, -0.5)
+        glVertex3f(0.5, -0.5, 0.5)
+
+        glVertex3f(0.5, 0.5, -0.5)
+        glVertex3f(0.5, 0.5, 0.5)
+
+        glVertex3f(-0.5, 0.5, -0.5)
+        glVertex3f(-0.5, 0.5, 0.5)
+
+        # Cara trasera
+        glVertex3f(-0.5, -0.5, 0.5)
+        glVertex3f(0.5, -0.5, 0.5)
+
+        glVertex3f(0.5, -0.5, 0.5)
+        glVertex3f(0.5, 0.5, 0.5)
+
+        glVertex3f(0.5, 0.5, 0.5)
+        glVertex3f(-0.5, 0.5, 0.5)
+
+        glVertex3f(-0.5, 0.5, 0.5)
+        glVertex3f(-0.5, -0.5, 0.5)
+
+        glEnd()
+
         glPopMatrix()
     
