@@ -17,17 +17,16 @@ class Carro:
         
         self.Position = [x, y, 5]
         self.Direction = [random.uniform(0.5, 1.0), random.uniform(0.5, 1.0), 5]
+        self.PastDirection = self.Direction
 
         m = math.sqrt(self.Direction[0]**2 + self.Direction[2]**2)
         self.Direction[0] /= m
         self.Direction[1] /= m
         self.Direction[0] *= vel
-        self.Direction[2] *= vel
-        
-        self.PastDirection = self.Direction
+        self.Direction[1] *= vel
         
         self.Calle = calle
-        self.Direction[1] *= vel
+
 
         try:
             self.objeto = OBJ("TC2008B-Reto/Objetos/Camaro.obj", swapyz=True)
