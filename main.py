@@ -1046,7 +1046,7 @@ class Hitbox3D:
     def car_collides_with_car(self, other_hitbox):
         # Verifica si hay colisión entre dos hitboxes 3D
         distance = np.abs(self.position - other_hitbox.position)
-        return np.all(distance < 20)
+        return np.all(distance < 22)
     
 parameters = {
    "steps": 5000,
