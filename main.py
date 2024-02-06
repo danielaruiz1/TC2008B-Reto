@@ -713,7 +713,7 @@ class CarAgent(ap.Agent):
         for car in self.model.carros:
             if car != self:
                 if self.hitbox.car_collides_with_car(car.hitbox):
-                    if self.crossing and self.hitbox.get_car_to_car_distance(car.hitbox) >= 21 and self.hitbox.get_car_to_car_distance(car.hitbox) < 25 or self.hitbox.get_car_to_car_distance(car.hitbox) < 7:
+                    if self.deciding or self.crossing and self.hitbox.get_car_to_car_distance(car.hitbox) >= 21 and self.hitbox.get_car_to_car_distance(car.hitbox) < 25 or self.hitbox.get_car_to_car_distance(car.hitbox) < 7:
                         continue
                     self.carro.Direction = [0,0,0]
                     print(self.hitbox.get_car_to_car_distance(car.hitbox))
@@ -823,6 +823,7 @@ class CarAgent(ap.Agent):
            self.D = self.options()
            self.I = self.filter(self.D)
            self.currentPlan = self.plan(self.I)
+           self.deciding = True
 
     def execute(self):
         # Ejecutar el plan
@@ -837,6 +838,7 @@ class CarAgent(ap.Agent):
                 self.rotate_and_move(-90)
             elif self.currentPlan == 2:
                 self.rotate_and_move(90)
+            self.deciding = False
 
     def move_forward(self):
         self.carro.Position = [
