@@ -798,7 +798,7 @@ class CarAgent(ap.Agent):
         # Que acciones puede realizar
         # Saca las tres opciones que puede sacar
         # 0 = Adelante, 1 = Derecha, 2 = Izquierda
-        return [0,1]
+        return [0,1,2]
 
     def filter(self, options):
         # Que accion va realizar
