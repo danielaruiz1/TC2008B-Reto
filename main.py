@@ -63,7 +63,7 @@ radius = 200
 #Arreglo para objetos
 objetos = []
 
-ontologia_file_path = "pFinal_onto.owl"
+ontologia_file_path = "TC2008B-Reto/pFinal_onto.owl"
 
 
 posiciones_entradas = np.array([[-300.0, -8.0],[-220.0, -8.0],[300.0, 8.0],[220.0, 8.0],[-35.0, -220.0], [-48, 220.0], [-180.0, 220.0],[-166.0, -220.0], [166.0, 220.0], [180.0, -220.0]])
@@ -76,8 +76,8 @@ posiciones_semaforos = np.array([[-25.0, 150.0, 90.0, 2], [-25.0, -197.0, 90.0, 
 
 #Arreglo para el manejo de texturas
 textures = []
-filename1 = "Texturas/textura0.jpeg"
-filename2 = "Texturas/textura3.jpg"
+filename1 = "TC2008B-Reto/Texturas/textura0.jpeg"
+filename2 = "TC2008B-Reto/Texturas/textura3.jpg"
 
 pygame.init()
 
@@ -156,9 +156,9 @@ def Init():
     glEnable(GL_COLOR_MATERIAL)
     glShadeModel(GL_SMOOTH)           # most obj files expect to be smooth-shaded      
     
-    objetos.append(OBJ("Objetos/SuperRoad.obj", swapyz=True))
+    objetos.append(OBJ("TC2008B-Reto/Objetos/SuperRoad.obj", swapyz=True))
     objetos[0].generate()
-    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
+    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
     objetos[1].generate()
 
 def draw_building(x, y, z, width, height, depth):
@@ -713,23 +713,26 @@ class CarAgent(ap.Agent):
         for car in self.model.carros:
             if car != self:
                 if self.hitbox.car_collides_with_car(car.hitbox):
+                    if self.hitbox.get_car_to_car_distance(car.hitbox) >= 21 and self.hitbox.get_car_to_car_distance(car.hitbox) < 25:
+                        continue
                     self.carro.Direction = [0,0,0]
+                    print(self.hitbox.get_car_to_car_distance(car.hitbox))
                 else:
                     self.carro.Direction = self.carro.PastDirection
                     
         # En caso de que dos carros se detengan por una colisión y ya no avancen
-        if self.carro.Direction == [0,0,0]:
-            minCar = None
-            minDistance = 10000000
-            for car in self.model.carros:
-                if car!=self and car.carro.Direction == [0,0,0]:
-                    if self.hitbox.get_car_to_car_distance(car.hitbox) < minDistance:
-                        minDistance = self.hitbox.get_car_to_car_distance(car.hitbox)
-                        minCar = car
-            if minCar != None:
-                cars_choice=[self,minCar]
-                car_to_move=random.choice(cars_choice)
-                car_to_move.carro.Direction = car_to_move.carro.PastDirection
+        # if self.carro.Direction == [0,0,0]:
+        #     minCar = None
+        #     minDistance = 10000000
+        #     for car in self.model.carros:
+        #         if car!=self and car.carro.Direction == [0,0,0]:
+        #             if self.hitbox.get_car_to_car_distance(car.hitbox) < minDistance:
+        #                 minDistance = self.hitbox.get_car_to_car_distance(car.hitbox)
+        #                 minCar = car
+        #     if minCar != None:
+        #         cars_choice=[self,minCar]
+        #         car_to_move=random.choice(cars_choice)
+        #         car_to_move.carro.Direction = car_to_move.carro.PastDirection
                     
         for objeto in e:
             if objeto != self:  # Excluir la instancia actual del agente
