@@ -63,21 +63,21 @@ radius = 200
 #Arreglo para objetos
 objetos = []
 
-ontologia_file_path = "TC2008B-Reto/pFinal_onto.owl"
+ontologia_file_path = "pFinal_onto.owl"
 
 
 posiciones_entradas = np.array([[-300.0, -8.0],[-220.0, -8.0],[300.0, 8.0],[220.0, 8.0],[-35.0, -220.0], [-48, 220.0], [-180.0, 220.0],[-166.0, -220.0], [166.0, 220.0], [180.0, -220.0]])
 posiciones_finales = np.array([[220.0, -8.0], [-220.0, 8.0], [-35.0, 220.0], [-48, -220.0], [-180.0, -220.0], [-166.0, 220.0], [166.0, -220.0], [180.0, 220.0]])
 
 posiciones_semaforos = np.array([[-25.0, 150.0, 90.0, 2], [-25.0, -197.0, 90.0, 2], [-25.0, 17.0, 90.0, 2],
-                                 [17.0, -25.0, 180.0, 0], [150.0, -25.0, 180.0, 0], [-197.0, -25.0, 180.0, 0],
                                  [-67.0, -25.0, 0.0, 0], [-197.0, -25.0, 0.0, 0], [150.0, -25.0, 0.0, 0],
-                                 [-25.0, -197.0, -90, 2], [-25.0, 150.0, -90.0, 2],[-25.0, -67.0, -90.0, 2],])
+                                 [17.0, -25.0, 180.0, 0], [150.0, -25.0, 180.0, 0], [-197.0, -25.0, 180.0, 0],
+                                 [-25.0, -197.0, -90, 2], [-25.0, 150.0, -90.0, 2],[-25.0, -65.0, -90.0, 2]])
 
 #Arreglo para el manejo de texturas
 textures = []
-filename1 = "TC2008B-Reto/Texturas/textura0.jpeg"
-filename2 = "TC2008B-Reto/Texturas/textura3.jpg"
+filename1 = "Texturas/textura0.jpeg"
+filename2 = "Texturas/textura3.jpg"
 
 pygame.init()
 
@@ -156,9 +156,9 @@ def Init():
     glEnable(GL_COLOR_MATERIAL)
     glShadeModel(GL_SMOOTH)           # most obj files expect to be smooth-shaded      
     
-    objetos.append(OBJ("TC2008B-Reto/Objetos/SuperRoad.obj", swapyz=True))
+    objetos.append(OBJ("Objetos/SuperRoad.obj", swapyz=True))
     objetos[0].generate()
-    objetos.append(OBJ("TC2008B-Reto/Objetos/Straightroad3.obj", swapyz=True))
+    objetos.append(OBJ("Objetos/Straightroad3.obj", swapyz=True))
     objetos[1].generate()
 
 def draw_building(x, y, z, width, height, depth):
@@ -737,66 +737,49 @@ class CarAgent(ap.Agent):
                     if self.crossing != True:
                         if self not in objeto.carros_suscritos:
                             if new_hitbox.collides_with(objeto.hitbox_light):
+                                print("semafoooroooo")
                                 self.suscribe_traffic_light(objeto)
                         else: 
                             if self.msg == 0:
+                                print("paradoooooooo")
                                 p = [objeto, "light", "stop"]
                                 break
-                            else:
+                            elif self.msg == 2:
+                                print("msg: ",self.msg)
                                 p = [objeto, "light", "go"]
+                                if self in objeto.carros_suscritos:
+                                    objeto.carros_suscritos.remove(self)
                                 break
                     else:
                         if new_hitbox.collides_with(objeto.hitbox_side):
                             p = [objeto, "side"]
-                            if self in objeto.carros_suscritos:
-                                objeto.carros_suscritos.remove(self)
-                            break
-
-                elif hasattr(objeto, "carro"):
-                    x, y, _ = self.carro.Position
-                    x2, y2, _ = objeto.carro.Position
-                    distancia = math.sqrt((x2 - x)**2 + (y2 - y)**2)
-
-                    # if(objeto.crossing == False and self.crossing == True):
-                    #     '''Esto para evitar que un carro avance cuando uno este en medio
-                    #    pues el problema principal son las velocidades'''
-                    #     if (distancia <= 16):
-                    #         # Se debe detener
-                    #         # Probable hace falta ajustar la distancia
-                    #         print("detuvo")
-                    #         self.moving = False
-                    #         #self.carro.Direction = [0,0,0]
-                    #         pass
-                    # elif(objeto.crossing == True and self.crossing == True):
-                    #     '''Cuando el carro y otro mas esten dentro de las interseccion
-                    #     se pueda decidir cual va primero'''
-                    #     #self.carro.Direction = self.carro.PastDirection
-                    #     self.moving = True
-                    #     if (distancia <= 20):
-                    #         print("carro dentro detenido")
-                    #         p = [objeto, "carro"]
-                    #         self.moving = False
-                    # else:
-                    #     self.moving = True    
+                            break  
         return p
     
     def brf(self, p):
        # Revisar el semaforo
         currentPos = self.carro.Position
         self.this_car.is_in_place = [Place(at_position = str(currentPos))]
-
         if(p[1] == "light"):
+            print("llegueeeeeeeeeeeeeeeeeee")
             if(p[2] == "stop"):
                 self.moving = False
-            else:
+            elif(p[2] == "go"):
+                print("soy yooooooooo")
                 self.moving = True
                 self.crossing = True
-            self.intentionSucceded = True
+                self.intentionSucceded = True
+            #self.moving = False
+            print(p[0])
             print("toco semaforo")
         elif(p[1] == "side"):
             print("Toco")
             self.crossing = False
-        elif(p[1] == "carro"):
+            self.currentPlan = 0
+            #self.moving = False
+        else: 
+            pass
+
             # if(self.action == 0 and p[0].action == 0):
             #     self.moving = True
             #     # Avance sin problema
@@ -815,7 +798,7 @@ class CarAgent(ap.Agent):
         # Que acciones puede realizar
         # Saca las tres opciones que puede sacar
         # 0 = Adelante, 1 = Derecha, 2 = Izquierda
-        return [0,1,2]
+        return [0,1]
 
     def filter(self, options):
         # Que accion va realizar
@@ -832,6 +815,7 @@ class CarAgent(ap.Agent):
        self.brf(p)
 
        if self.intentionSucceded:
+           print("yeaaaaa")
            self.intentionSucceded = False
            self.D = self.options()
            self.I = self.filter(self.D)
@@ -839,6 +823,7 @@ class CarAgent(ap.Agent):
 
     def execute(self):
         # Ejecutar el plan
+
         if self.moving:
             if not self.crossing:
                 self.currentPlan = 0
@@ -849,7 +834,6 @@ class CarAgent(ap.Agent):
                 self.rotate_and_move(-90)
             elif self.currentPlan == 2:
                 self.rotate_and_move(90)
-                #self.move_forward()
 
     def move_forward(self):
         self.carro.Position = [
@@ -864,9 +848,9 @@ class CarAgent(ap.Agent):
             self.distance_traveled = 0
 
         if angle == 90:
-            distancia_deseada = 37
+            distancia_deseada = 40
         elif angle == -90:
-            distancia_deseada = 22
+            distancia_deseada = 27 # derecha
         else:
             return  # Manejar otros ángulos no implementado
 
@@ -895,8 +879,6 @@ class CarAgent(ap.Agent):
                 rotated_direction = np.dot(rotation_matrix, self.carro.Direction[:2])
                 self.carro.Direction[0] = rotated_direction[0]
                 self.carro.Direction[1] = rotated_direction[1]
-
-                print("EEEEEEEEE: ", self.moving)
 
                 self.distance_traveled = 0  # Reiniciar la distancia después del giro completo
                 print("Dirección ajustada después del giro:", self.carro.Direction)
@@ -969,17 +951,21 @@ class SemaforoAgent(ap.Agent):
         self.estado = semaforo.Light
         if self.semaforo and not self.hitbox_light:  # Verificar que haya un semáforo y el Hitbox3D no se haya creado
             if self.semaforo.Rotacion == 180:
-                self.hitbox_light = Hitbox3D(position=[semaforo.Position[0] * -1 - 10, semaforo.Position[1] + 5, 10], size=[7, 7, 7])
-                self.hitbox_side = Hitbox3D(position=[semaforo.Position[0] * -1 - 20, semaforo.Position[1] + 55, 10], size=[7, 7, 7])
+                print("180")
+                self.hitbox_light = Hitbox3D(position=[semaforo.Position[0] * -1 - 20, semaforo.Position[1] + 10, 5], size=[3, 3, 3]) # ya
+                self.hitbox_side = Hitbox3D(position=[semaforo.Position[0] * -1 - 20, semaforo.Position[1] + 60, 5], size=[3, 3, 3]) # ya
             elif self.semaforo.Rotacion == 0:
-                self.hitbox_light = Hitbox3D(position=[semaforo.Position[0] + 10, semaforo.Position[1] * -1 - 5, 10], size=[7, 7, 7])
-                self.hitbox_side = Hitbox3D(position=[semaforo.Position[0] + 10, semaforo.Position[1] * -1 - 55, 10], size=[7, 7, 7])
+                print("0")
+                self.hitbox_light = Hitbox3D(position=[semaforo.Position[0] + 10, semaforo.Position[1] * -1 - 5, 5], size=[3, 3, 3])
+                self.hitbox_side = Hitbox3D(position=[semaforo.Position[0] + 10, semaforo.Position[1] * -1 - 55, 5], size=[3, 3, 3])
             elif self.semaforo.Rotacion == 90:
-                self.hitbox_light = Hitbox3D(position=[semaforo.Position[1] * -1 - 45, semaforo.Position[0] * -1 -40, 10], size=[7, 7, 7])
-                self.hitbox_side = Hitbox3D(position=[semaforo.Position[1] * -1 + 5, semaforo.Position[0] * -1 - 30, 10], size=[7, 7, 7])
+                print("90")
+                self.hitbox_light = Hitbox3D(position=[semaforo.Position[1] * -1 - 53, semaforo.Position[0] * -1 -27, 5], size=[3, 3, 3]) # ya
+                self.hitbox_side = Hitbox3D(position=[semaforo.Position[1] * -1, semaforo.Position[0] * -1 - 27, 5], size=[3, 3, 3]) # ya
             elif self.semaforo.Rotacion == -90:
-                self.hitbox_light = Hitbox3D(position=[semaforo.Position[1] + 45, semaforo.Position[0] * -1 - 10, 10], size=[7, 7, 7])
-                self.hitbox_side = Hitbox3D(position=[semaforo.Position[1] - 5, semaforo.Position[0] + 40, 10], size=[7, 7, 7])
+                print("-90")
+                self.hitbox_light = Hitbox3D(position=[semaforo.Position[1] + 53, semaforo.Position[0] * -1 - 20, 5], size=[3, 3, 3]) # ya 
+                self.hitbox_side = Hitbox3D(position=[semaforo.Position[1] - 10, semaforo.Position[0] + 30, 5], size=[3, 3, 3]) # ya
             
             self.semaforo.hitbox_light = self.hitbox_light
             self.semaforo.hitbox_side = self.hitbox_light
@@ -1033,7 +1019,7 @@ class Ciudad(ap.Model):
         Init()
         # Se generan los agentes junto con su instancia de carro
         #self.carros = ap.AgentList(self, self.p.carros, CarAgent)
-        self.carros = ap.AgentList(self, 4, CarAgent)
+        self.carros = ap.AgentList(self, 10, CarAgent)
         self.semaforos = ap.AgentList(self, 12, SemaforoAgent)
 
         for i, agente in enumerate(self.semaforos):

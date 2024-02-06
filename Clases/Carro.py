@@ -26,7 +26,7 @@ class Carro:
         self.Direction[1] *= vel
 
         try:
-            self.objeto = OBJ("TC2008B-Reto/Objetos/Camaro.obj", swapyz=True)
+            self.objeto = OBJ("Objetos/Camaro.obj", swapyz=True)
             if self.objeto is not None:
                 self.objeto.generate()
             else:
