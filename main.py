@@ -713,7 +713,7 @@ class CarAgent(ap.Agent):
         for car in self.model.carros:
             if car != self:
                 if self.hitbox.car_collides_with_car(car.hitbox):
-                    if self.hitbox.get_car_to_car_distance(car.hitbox) >= 21 and self.hitbox.get_car_to_car_distance(car.hitbox) < 25 or self.hitbox.get_car_to_car_distance(car.hitbox) < 7:
+                    if self.crossing and self.hitbox.get_car_to_car_distance(car.hitbox) >= 21 and self.hitbox.get_car_to_car_distance(car.hitbox) < 25 or self.hitbox.get_car_to_car_distance(car.hitbox) < 7:
                         continue
                     self.carro.Direction = [0,0,0]
                     print(self.hitbox.get_car_to_car_distance(car.hitbox))
@@ -721,18 +721,18 @@ class CarAgent(ap.Agent):
                     self.carro.Direction = self.carro.PastDirection
                     
         # En caso de que dos carros se detengan por una colisión y ya no avancen
-        # if self.carro.Direction == [0,0,0]:
-        #     minCar = None
-        #     minDistance = 10000000
-        #     for car in self.model.carros:
-        #         if car!=self and car.carro.Direction == [0,0,0]:
-        #             if self.hitbox.get_car_to_car_distance(car.hitbox) < minDistance:
-        #                 minDistance = self.hitbox.get_car_to_car_distance(car.hitbox)
-        #                 minCar = car
-        #     if minCar != None:
-        #         cars_choice=[self,minCar]
-        #         car_to_move=random.choice(cars_choice)
-        #         car_to_move.carro.Direction = car_to_move.carro.PastDirection
+        if self.carro.Direction == [0,0,0]:
+            minCar = None
+            minDistance = 10000000
+            for car in self.model.carros:
+                if car!=self and car.carro.Direction == [0,0,0]:
+                    if self.hitbox.get_car_to_car_distance(car.hitbox) < minDistance:
+                        minDistance = self.hitbox.get_car_to_car_distance(car.hitbox)
+                        minCar = car
+            if minCar != None:
+                cars_choice=[self,minCar]
+                car_to_move=random.choice(cars_choice)
+                car_to_move.carro.Direction = car_to_move.carro.PastDirection
                     
         for objeto in e:
             if objeto != self:  # Excluir la instancia actual del agente
